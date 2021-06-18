@@ -1,0 +1,45 @@
+info:
+  app: 
+    name: bovine-be
+    
+server:
+    port: 30024
+    
+logging:
+  level:
+    com:
+      cema: DEBUG
+app:
+  region: AR
+
+spring:
+  profiles:
+    active: local
+  application:
+    name: bovine-be
+  jpa:
+    show-sql: true
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 15
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:postgresql://localhost:5432/bovine
+    username: bovine
+    password: Xr5m#behGWMjMU+%
+
+---
+spring:
+  datasource:
+    url: jdbc:postgresql://192.168.100.5:5432/bovine
+  config:
+    activate:
+      on-profile: qa
+
+---
+spring:
+  datasource:
+    url: jdbc:postgresql://192.168.100.6:5432/bovine
+  config:
+    activate:
+      on-profile: prod
