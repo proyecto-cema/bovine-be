@@ -1,7 +1,5 @@
 package com.cema.bovine.entities;
 
-import com.cema.bovine.domain.Bovine;
-
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;

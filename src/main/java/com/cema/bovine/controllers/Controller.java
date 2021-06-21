@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
 @Api(produces = "application/json", value = "Allows interaction with the bovine database. V1")
 public class Controller {
 
-    private static final String baseUrl = "/bovines/";
+    private static final String BASE_URL = "/bovines/";
 
     private static final Logger LOG = LoggerFactory.getLogger(Controller.class);
 
@@ -40,7 +40,7 @@ public class Controller {
             @ApiResponse(code = 200, message = "Successfully found bovine"),
             @ApiResponse(code = 404, message = "Not found bovine")
     })
-    @GetMapping(value = baseUrl +"{tag}", produces = {MediaType.APPLICATION_JSON_VALUE})
+    @GetMapping(value = BASE_URL +"{tag}", produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Bovine> lookUpBovineByTag(
             @ApiParam(
                     value = "The tag of the bovine you are looking for.",
@@ -63,7 +63,7 @@ public class Controller {
             @ApiResponse(code = 201, message = "Bovine created successfully"),
             @ApiResponse(code = 409, message = "The bovine you were trying to create already exists")
     })
-    @PostMapping(value = baseUrl, produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
+    @PostMapping(value = BASE_URL, produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Bovine> registerBovine(
             @ApiParam(
                     value = "Bovine data to be inserted.")
@@ -89,7 +89,7 @@ public class Controller {
             @ApiResponse(code = 201, message = "Bovine deleted successfully"),
             @ApiResponse(code = 404, message = "The bovine you were trying to reach is not found")
     })
-    @DeleteMapping(value = baseUrl +"{tag}", produces = {MediaType.APPLICATION_JSON_VALUE})
+    @DeleteMapping(value = BASE_URL +"{tag}", produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Bovine> deleteBovine(
             @ApiParam(
                     value = "The tag for the bovine we are looking for.",

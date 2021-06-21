@@ -6,7 +6,7 @@ import java.util.Date;
 
 public class Bovine {
 
-    @ApiModelProperty(notes = "The tag attached to this bovine", example = "12")
+    @ApiModelProperty(notes = "The tag attached to this bovine", example = "123")
     private String tag;
     @ApiModelProperty(notes = "The description for this bovine", example = "Brown with spots")
     private String description;
