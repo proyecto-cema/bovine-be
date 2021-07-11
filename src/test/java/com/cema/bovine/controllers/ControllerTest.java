@@ -65,6 +65,39 @@ public class ControllerTest {
     }
 
     @Test
+    public void updateBovineShouldAlwaysReturnOKWhenBovineUpdatedCorrectly() {
+        CemaBovine cemaBovine = new CemaBovine();
+        Bovine bovine = new Bovine();
+
+        when(bovineRepository.findCemaBovineByTag(bovine.getTag())).thenReturn(cemaBovine);
+        when(bovineMapping.mapDomainToEntity(bovine, bovine.getTag())).thenReturn(cemaBovine);
+
+        Controller controller = new Controller(bovineRepository, bovineMapping);
+        ResponseEntity<Bovine> result = controller.updateBovine(bovine.getTag(), bovine);
+
+        HttpStatus resultingStatus = result.getStatusCode();
+
+        assertThat(resultingStatus, is(HttpStatus.OK));
+    }
+
+    @Test
+    public void updateBovineShouldAlwaysReturnNotFoundWhenBovineDoesntExists() {
+        CemaBovine cemaBovine = new CemaBovine();
+        Bovine bovine = new Bovine();
+        String tag = "123";
+        when(bovineRepository.findCemaBovineByTag(tag)).thenReturn(cemaBovine);
+
+        Controller controller = new Controller(bovineRepository, bovineMapping);
+
+        Exception exception = assertThrows(BovineNotFoundException.class, () -> {
+            controller.updateBovine("234", bovine);
+        });
+        String resultingMessage = exception.getMessage();
+
+        assertThat(resultingMessage, is("Bovine with tag 234 doesn't exits"));
+    }
+
+    @Test
     public void registerBovineShouldAlwaysReturnCreatedWhenBovineAddedCorrectly() {
         CemaBovine cemaBovine = new CemaBovine();
         Bovine bovine = new Bovine();

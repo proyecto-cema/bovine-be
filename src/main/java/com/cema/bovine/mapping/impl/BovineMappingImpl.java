@@ -29,4 +29,16 @@ public class BovineMappingImpl implements BovineMapping {
 
         return bovine;
     }
+
+
+    @Override
+    public CemaBovine mapDomainToEntity(Bovine mapBovine, String tag) {
+        CemaBovine bovine = new CemaBovine();
+        bovine.setTag(tag);
+        bovine.setDescription(mapBovine.getDescription());
+        bovine.setGenre(mapBovine.getGenre());
+        bovine.setTaggingDate(mapBovine.getTaggingDate());
+
+        return bovine;
+    }
 }
