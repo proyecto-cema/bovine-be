@@ -89,7 +89,7 @@ public class Controller {
             @ApiResponse(code = 200, message = "Bovine modified successfully"),
             @ApiResponse(code = 404, message = "The bovine you were trying to modify doesn't exists")
     })
-    @PutMapping(value = BASE_URL+"{tag}", produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
+    @PutMapping(value = BASE_URL +"{tag}", produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Bovine> updateBovine(
             @ApiParam(
                     value = "The tag of the bovine we are looking for.",
@@ -107,7 +107,7 @@ public class Controller {
             throw new BovineNotFoundException(String.format("Bovine with tag %s doesn't exits", tag));
         }
 
-        cemaBovine = bovineMapping.mapDomainToEntity(bovine, tag);
+        cemaBovine = bovineMapping.mapDomainToEntity(bovine, cemaBovine);
 
         bovineRepository.save(cemaBovine);
 

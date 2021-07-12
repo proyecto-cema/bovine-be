@@ -8,5 +8,5 @@ public interface BovineMapping {
 
     CemaBovine mapDomainToEntity(Bovine bovine);
 
-    CemaBovine mapDomainToEntity(Bovine mapBovine, String tag);
+    CemaBovine mapDomainToEntity(Bovine mapBovine, CemaBovine entityBovine);
 }

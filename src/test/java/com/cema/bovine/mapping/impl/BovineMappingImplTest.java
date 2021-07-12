@@ -71,7 +71,10 @@ class BovineMappingImplTest {
         bovine.setGenre(genre);
         bovine.setTaggingDate(taggingDate);
 
-        CemaBovine resultBovine = bovineMapping.mapDomainToEntity(bovine, tag);
+        CemaBovine resultBovine = new CemaBovine();
+        resultBovine.setTag(tag);
+
+        resultBovine = bovineMapping.mapDomainToEntity(bovine, resultBovine);
 
         assertThat(resultBovine.getTag(), is(tag));
         assertThat(resultBovine.getDescription(), is(description));

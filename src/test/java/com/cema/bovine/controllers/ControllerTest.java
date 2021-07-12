@@ -70,7 +70,7 @@ public class ControllerTest {
         Bovine bovine = new Bovine();
 
         when(bovineRepository.findCemaBovineByTag(bovine.getTag())).thenReturn(cemaBovine);
-        when(bovineMapping.mapDomainToEntity(bovine, bovine.getTag())).thenReturn(cemaBovine);
+        when(bovineMapping.mapDomainToEntity(bovine, cemaBovine)).thenReturn(cemaBovine);
 
         Controller controller = new Controller(bovineRepository, bovineMapping);
         ResponseEntity<Bovine> result = controller.updateBovine(bovine.getTag(), bovine);
