@@ -9,6 +9,7 @@ logging:
   level:
     com:
       cema: DEBUG
+    org.springframework.web.filter.CommonsRequestLoggingFilter: DEBUG
 app:
   region: AR
 
