@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bovine-be
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bovine-be
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 5 
+  template:
+    metadata:
+      labels:
+        app: bovine-be
+    spec:
+      nodeSelector:
+        "beta.kubernetes.io/os": linux
+      containers:
+      - name: bovine-be
+        image: cemaregistry.azurecr.io/cema/bovine-be:$VERSION
+        ports:
+        - containerPort: 30024
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: 250m
+          limits:
+            cpu: 500m
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: $ENV
+      imagePullSecrets:
+      - name: regcred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bovine-be
+spec:
+  type: NodePort
+  ports:
+  - port: 30024
+    nodePort: 30024
+  selector:
+    app: bovine-be
