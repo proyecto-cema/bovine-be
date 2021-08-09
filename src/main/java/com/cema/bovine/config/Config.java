@@ -11,7 +11,10 @@ import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
-
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.web.SecurityFilterChain;
 import java.util.ArrayList;
 
 @Configuration
@@ -48,4 +51,14 @@ public class Config {
         filter.setAfterMessagePrefix("REQUEST DATA : ");
         return filter;
     }
+
+//    @Bean
+//    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+//        return http
+//                .requiresChannel(channel ->
+//                        channel.anyRequest().requiresSecure())
+//                .authorizeRequests(authorize ->
+//                        authorize.anyRequest().permitAll())
+//                .build();
+//    }
 }

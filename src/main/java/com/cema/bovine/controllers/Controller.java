@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -53,6 +54,11 @@ public class Controller {
         this.bovineRepository = bovineRepository;
         this.bovineMapping = bovineMapping;
         this.databaseService = databaseService;
+    }
+
+    @RequestMapping(value = "/home/", method = RequestMethod.GET)
+    public String hello() {
+        return "welcome to spring boot application";
     }
 
     @ApiOperation(value = "Retrieve bovine from tag sent data", response = Bovine.class)
