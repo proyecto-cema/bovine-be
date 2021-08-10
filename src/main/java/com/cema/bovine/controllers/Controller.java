@@ -14,7 +14,6 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.ResponseHeader;
-import org.apache.commons.logging.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -192,7 +191,7 @@ public class Controller {
 
         LOG.info("Searching bovines for bovine with tag {}, genre {} and description {}", tag, genre, description);
 
-        if(!StringUtils.hasText(tag) && !StringUtils.hasText(genre) && !StringUtils.hasText(description)) {
+        if (!StringUtils.hasText(tag) && !StringUtils.hasText(genre) && !StringUtils.hasText(description)) {
             LOG.error("At least one search parameter must be provided.");
             throw new InvalidParameterException("Invalid search, all parameters blank");
         }

@@ -1,9 +1,15 @@
 info:
   app: 
     name: bovine-be
-    
+
 server:
     port: 30024
+    ssl:
+      key-store: classpath:cema.jks
+      key-store-password: slipknot
+      key-store-type: jks
+      key-alias: proyecto-cema.com
+      key-password: slipknot
     
 logging:
   level:
@@ -14,6 +20,10 @@ app:
   region: AR
 
 spring:
+  security:
+    user:
+      name: cema
+      password: cema
   profiles:
     active: local
   application:
