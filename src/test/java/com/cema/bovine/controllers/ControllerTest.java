@@ -218,18 +218,4 @@ public class ControllerTest {
         assertThat(responseHeaders.getFirst("total-pages"), is("1"));
         assertThat(responseHeaders.getFirst("current-page"), is("0"));
     }
-
-    @Test
-    public void searchBovinesShouldAlwaysReturnUnprocessableWhenNoSearchParametersPassed(){
-        Controller controller = new Controller(bovineRepository, bovineMapping, databaseService);
-
-        Exception exception = assertThrows(InvalidParameterException.class, () -> {
-            controller.searchBovines(null, null, null, 0, 2);
-        });
-
-        String resultingMessage = exception.getMessage();
-
-        assertThat(resultingMessage, is("Invalid search, all parameters blank"));
-    }
-
 }

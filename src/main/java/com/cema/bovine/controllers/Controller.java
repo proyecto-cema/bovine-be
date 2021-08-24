@@ -192,10 +192,6 @@ public class Controller {
 
         LOG.info("Searching bovines for bovine with tag {}, genre {} and description {}", tag, genre, description);
 
-        if(!StringUtils.hasText(tag) && !StringUtils.hasText(genre) && !StringUtils.hasText(description)) {
-            LOG.error("At least one search parameter must be provided.");
-            throw new InvalidParameterException("Invalid search, all parameters blank");
-        }
 
         Page<CemaBovine> bovinePage = databaseService.searchBovines(tag, genre, description, page, size);
         List<CemaBovine> bovineList = bovinePage.getContent();
