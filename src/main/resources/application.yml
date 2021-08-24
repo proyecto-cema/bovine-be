@@ -28,6 +28,11 @@ spring:
     url: jdbc:postgresql://localhost:5432/bovine
     username: bovine
     password: Xr5m#behGWMjMU+%
+back-end:
+  users:
+    url: "http://localhost:30023/v1/users"
+
+
 
 ---
 spring:
@@ -36,6 +41,9 @@ spring:
   config:
     activate:
       on-profile: qa
+back-end:
+  users:
+    url: "http://192.168.100.5:30023/v1/users"
 
 ---
 spring:
@@ -44,3 +52,6 @@ spring:
   config:
     activate:
       on-profile: prod
+back-end:
+  users:
+    url: "http://192.168.100.6:30023/v1/users"

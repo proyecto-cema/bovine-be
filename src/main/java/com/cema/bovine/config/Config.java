@@ -3,6 +3,7 @@ package com.cema.bovine.config;
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.filter.CommonsRequestLoggingFilter;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -24,6 +25,11 @@ public class Config {
     public Config(BuildProperties buildProperties) {
         this.apiInfo = new ApiInfo("Cema " + buildProperties.getName() + " API Documentation", "Swagger documentation of the " + buildProperties.getName() + " API", buildProperties.getVersion(), "urn:tos",
                 CONTACT, "Apache 2.0", "http://www.apache.org/licenses/LICENSE-2.0", new ArrayList<>());
+    }
+
+    @Bean
+    public RestTemplate restTemplate(){
+        return new RestTemplate();
     }
 
     @Bean
