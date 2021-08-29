@@ -28,6 +28,9 @@ public class CemaBovine {
     @Column(name = "genre")
     private String genre;
 
+    @Column(name = "establishment_cuig")
+    private String establishmentCuig;
+
     @Column(name = "tagging_date")
     private Date taggingDate;
 
@@ -61,6 +64,14 @@ public class CemaBovine {
 
     public void setGenre(String genre) {
         this.genre = genre;
+    }
+
+    public String getEstablishmentCuig() {
+        return establishmentCuig;
+    }
+
+    public void setEstablishmentCuig(String establishmentCuig) {
+        this.establishmentCuig = establishmentCuig;
     }
 
     public Date getTaggingDate() {

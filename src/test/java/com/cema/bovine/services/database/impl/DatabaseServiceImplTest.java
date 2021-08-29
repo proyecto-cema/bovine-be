@@ -37,7 +37,8 @@ class DatabaseServiceImplTest {
 
     @Test
     public void searchBovinesShouldReturnBovinesFromDatabase(){
-        String tag ="tag";
+        String cuig = "cuig";
+        String tag = "tag";
         String genre = "genre";
         String description = "description";
         int page = 0;
@@ -48,7 +49,7 @@ class DatabaseServiceImplTest {
 
         DatabaseServiceImpl databaseService = new DatabaseServiceImpl(bovineRepository);
 
-        Page<CemaBovine> resultPage = databaseService.searchBovines(tag, genre, description, page, size);
+        Page<CemaBovine> resultPage = databaseService.searchBovines(cuig, tag, genre, description, page, size);
 
         assertThat(resultPage, is(mockPage));
 
@@ -57,6 +58,7 @@ class DatabaseServiceImplTest {
 
         CemaBovine search = (CemaBovine) resultExample.getProbe();
 
+        assertThat(search.getEstablishmentCuig(), is(cuig));
         assertThat(search.getTag(), is(tag));
         assertThat(search.getDescription(), is(description));
         assertThat(search.getGenre(), is(genre));

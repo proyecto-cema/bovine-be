@@ -49,7 +49,7 @@ class BovineMappingImplTest {
         bovine.setGenre(genre);
         bovine.setTaggingDate(taggingDate);
 
-        CemaBovine resultBovine = bovineMapping.mapDomainToEntity(bovine);
+        CemaBovine resultBovine = bovineMapping.updateEntityWithDomain(bovine);
 
         assertThat(resultBovine.getTag(), is(tag));
         assertThat(resultBovine.getDescription(), is(description));
@@ -59,26 +59,53 @@ class BovineMappingImplTest {
     }
 
     @Test
-    public void mapDomainBovineToEntityCemaBovineWithTagShouldReturnCorrectEntityCemaBovine(){
+    public void updateDomainWithEntityShouldUpdateAllPresentFields(){
         String tag = "123";
         String description = "black";
         String genre = "female";
+        String establishmentCuig = "establishmentCuig";
         Date taggingDate = new Date();
 
         Bovine bovine = new Bovine();
         bovine.setDescription(description);
         bovine.setTag(tag);
         bovine.setGenre(genre);
+        bovine.setEstablishmentCuig(establishmentCuig);
         bovine.setTaggingDate(taggingDate);
 
-        CemaBovine resultBovine = new CemaBovine();
-        resultBovine.setTag(tag);
+        CemaBovine cemaBovine = new CemaBovine();
 
-        resultBovine = bovineMapping.mapDomainToEntity(bovine, resultBovine);
+        CemaBovine resultBovine = bovineMapping.updateEntityWithDomain(bovine, cemaBovine);
 
-        assertThat(resultBovine.getTag(), is(tag));
         assertThat(resultBovine.getDescription(), is(description));
         assertThat(resultBovine.getGenre(), is(genre));
+        assertThat(resultBovine.getEstablishmentCuig(), is(establishmentCuig));
+        assertThat(resultBovine.getTaggingDate(), is(taggingDate));
+
+    }
+
+    @Test
+    public void updateDomainWithEntityShouldLeaveFieldsUntouchedIfNotPresent(){
+        String tag = "123";
+        String description = "black";
+        String genre = "female";
+        String establishmentCuig = "establishmentCuig";
+        Date taggingDate = new Date();
+
+        Bovine bovine = new Bovine();
+
+        CemaBovine cemaBovine = new CemaBovine();
+        cemaBovine.setDescription(description);
+        cemaBovine.setTag(tag);
+        cemaBovine.setGenre(genre);
+        cemaBovine.setEstablishmentCuig(establishmentCuig);
+        cemaBovine.setTaggingDate(taggingDate);
+
+        CemaBovine resultBovine = bovineMapping.updateEntityWithDomain(bovine, cemaBovine);
+
+        assertThat(resultBovine.getDescription(), is(description));
+        assertThat(resultBovine.getGenre(), is(genre));
+        assertThat(resultBovine.getEstablishmentCuig(), is(establishmentCuig));
         assertThat(resultBovine.getTaggingDate(), is(taggingDate));
 
     }
