@@ -21,8 +21,9 @@ public class DatabaseServiceImpl implements DatabaseService {
 
 
     @Override
-    public Page<CemaBovine> searchBovines(String tag, String genre, String description, int page, int size) {
+    public Page<CemaBovine> searchBovines(String cuig, String tag, String genre, String description, int page, int size) {
         CemaBovine bovineToSearch = new CemaBovine();
+        bovineToSearch.setEstablishmentCuig(cuig);
         bovineToSearch.setTag(tag);
         bovineToSearch.setGenre(genre);
         bovineToSearch.setDescription(description);

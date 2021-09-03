@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface DatabaseService {
 
-    Page<CemaBovine> searchBovines(String tag, String genre, String description, int page, int size);
+    Page<CemaBovine> searchBovines(String cuig, String tag, String genre, String description, int page, int size);
 }

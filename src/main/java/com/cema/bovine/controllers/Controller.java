@@ -4,7 +4,6 @@ import com.cema.bovine.domain.Bovine;
 import com.cema.bovine.entities.CemaBovine;
 import com.cema.bovine.exceptions.BovineAlreadyExistsException;
 import com.cema.bovine.exceptions.BovineNotFoundException;
-import com.cema.bovine.exceptions.InvalidParameterException;
 import com.cema.bovine.mapping.BovineMapping;
 import com.cema.bovine.repositories.BovineRepository;
 import com.cema.bovine.services.database.DatabaseService;
@@ -14,7 +13,6 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.ResponseHeader;
-import org.apache.commons.logging.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -22,7 +20,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -97,7 +94,7 @@ public class Controller {
             throw new BovineAlreadyExistsException(String.format("The bovine with tag %s already exists", bovine.getTag()));
         }
 
-        CemaBovine newBovine = bovineMapping.mapDomainToEntity(bovine);
+        CemaBovine newBovine = bovineMapping.updateEntityWithDomain(bovine);
 
         bovineRepository.save(newBovine);
 
@@ -127,7 +124,7 @@ public class Controller {
             throw new BovineNotFoundException(String.format("Bovine with tag %s doesn't exits", tag));
         }
 
-        cemaBovine = bovineMapping.mapDomainToEntity(bovine, cemaBovine);
+        cemaBovine = bovineMapping.updateEntityWithDomain(bovine, cemaBovine);
 
         bovineRepository.save(cemaBovine);
 
@@ -170,6 +167,10 @@ public class Controller {
     @GetMapping(value = BASE_URL + "search", produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<List<Bovine>> searchBovines(
             @ApiParam(
+                    value = "The cuig of the establishment of the bovine.",
+                    example = "312")
+            @RequestParam(value = "cuig", required = false) String cuig,
+            @ApiParam(
                     value = "The tag of the bovine you are looking for.",
                     example = "123")
             @RequestParam(value = "tag", required = false) String tag,
@@ -190,10 +191,10 @@ public class Controller {
                     example = "10")
             @RequestParam(value = "size", required = false, defaultValue = "3") int size) {
 
-        LOG.info("Searching bovines for bovine with tag {}, genre {} and description {}", tag, genre, description);
+        LOG.info("Searching bovines for bovine with cuig {}, tag {}, genre {} and description {}", cuig, tag, genre, description);
 
 
-        Page<CemaBovine> bovinePage = databaseService.searchBovines(tag, genre, description, page, size);
+        Page<CemaBovine> bovinePage = databaseService.searchBovines(cuig, tag, genre, description, page, size);
         List<CemaBovine> bovineList = bovinePage.getContent();
         LOG.info("Returned {} bovines from db", bovineList.size());
 

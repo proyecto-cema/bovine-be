@@ -4,7 +4,6 @@ import com.cema.bovine.domain.Bovine;
 import com.cema.bovine.entities.CemaBovine;
 import com.cema.bovine.exceptions.BovineAlreadyExistsException;
 import com.cema.bovine.exceptions.BovineNotFoundException;
-import com.cema.bovine.exceptions.InvalidParameterException;
 import com.cema.bovine.mapping.BovineMapping;
 import com.cema.bovine.repositories.BovineRepository;
 import com.cema.bovine.services.database.DatabaseService;
@@ -81,7 +80,7 @@ public class ControllerTest {
         Bovine bovine = new Bovine();
 
         when(bovineRepository.findCemaBovineByTag(bovine.getTag())).thenReturn(cemaBovine);
-        when(bovineMapping.mapDomainToEntity(bovine, cemaBovine)).thenReturn(cemaBovine);
+        when(bovineMapping.updateEntityWithDomain(bovine, cemaBovine)).thenReturn(cemaBovine);
 
         Controller controller = new Controller(bovineRepository, bovineMapping, databaseService);
         ResponseEntity<Bovine> result = controller.updateBovine(bovine.getTag(), bovine);
@@ -113,7 +112,7 @@ public class ControllerTest {
         CemaBovine cemaBovine = new CemaBovine();
         Bovine bovine = new Bovine();
 
-        when(bovineMapping.mapDomainToEntity(bovine)).thenReturn(cemaBovine);
+        when(bovineMapping.updateEntityWithDomain(bovine)).thenReturn(cemaBovine);
 
         Controller controller = new Controller(bovineRepository, bovineMapping, databaseService);
         ResponseEntity<Bovine> result = controller.registerBovine(bovine);
@@ -133,7 +132,7 @@ public class ControllerTest {
         bovine.setTag(tag);
 
         when(bovineRepository.findCemaBovineByTag(tag)).thenReturn(cemaBovine);
-        when(bovineMapping.mapDomainToEntity(bovine)).thenReturn(cemaBovine);
+        when(bovineMapping.updateEntityWithDomain(bovine)).thenReturn(cemaBovine);
 
         Controller controller = new Controller(bovineRepository, bovineMapping, databaseService);
         Exception exception = assertThrows(BovineAlreadyExistsException.class, () -> {
@@ -185,8 +184,10 @@ public class ControllerTest {
         CemaBovine cemaBovine1 = new CemaBovine();
         CemaBovine cemaBovine2 = new CemaBovine();
         Bovine bovine1 = new Bovine();
+        bovine1.setEstablishmentCuig("1");
         bovine1.setTag("11");
         Bovine bovine2 = new Bovine();
+        bovine2.setEstablishmentCuig("1");
         bovine2.setTag("12");
         bovineList.add(cemaBovine1);
         bovineList.add(cemaBovine2);
@@ -195,13 +196,13 @@ public class ControllerTest {
         when(bovinePage.getTotalElements()).thenReturn(2L);
         when(bovinePage.getTotalPages()).thenReturn(1);
         when(bovinePage.getNumber()).thenReturn(0);
-        when(databaseService.searchBovines("1", null, null, 0, 2)).thenReturn(bovinePage);
+        when(databaseService.searchBovines("1", "1", null, null, 0, 2)).thenReturn(bovinePage);
         when(bovineMapping.mapEntityToDomain(cemaBovine1)).thenReturn(bovine1);
         when(bovineMapping.mapEntityToDomain(cemaBovine2)).thenReturn(bovine2);
 
         Controller controller = new Controller(bovineRepository, bovineMapping, databaseService);
 
-        ResponseEntity<List<Bovine>> result = controller.searchBovines("1", null, null, 0, 2);
+        ResponseEntity<List<Bovine>> result = controller.searchBovines("1", "1", null, null, 0, 2);
 
         HttpStatus resultingStatus = result.getStatusCode();
 

@@ -12,6 +12,8 @@ public class Bovine {
     private String description;
     @ApiModelProperty(notes = "The bovine genre", example = "male")
     private String genre;
+    @ApiModelProperty(notes = "The cuig of the establishment this bovine belongs to", example = "321")
+    private String establishmentCuig;
     @ApiModelProperty(notes = "Date when the bovine was tagged")
     private Date taggingDate;
 
@@ -37,6 +39,14 @@ public class Bovine {
 
     public void setGenre(String genre) {
         this.genre = genre;
+    }
+
+    public String getEstablishmentCuig() {
+        return establishmentCuig;
+    }
+
+    public void setEstablishmentCuig(String establishmentCuig) {
+        this.establishmentCuig = establishmentCuig;
     }
 
     public Date getTaggingDate() {
