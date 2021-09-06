@@ -49,7 +49,7 @@ class BovineMappingImplTest {
         bovine.setGenre(genre);
         bovine.setTaggingDate(taggingDate);
 
-        CemaBovine resultBovine = bovineMapping.updateEntityWithDomain(bovine);
+        CemaBovine resultBovine = bovineMapping.mapDomainToEntity(bovine);
 
         assertThat(resultBovine.getTag(), is(tag));
         assertThat(resultBovine.getDescription(), is(description));
@@ -75,7 +75,7 @@ class BovineMappingImplTest {
 
         CemaBovine cemaBovine = new CemaBovine();
 
-        CemaBovine resultBovine = bovineMapping.updateEntityWithDomain(bovine, cemaBovine);
+        CemaBovine resultBovine = bovineMapping.mapDomainToEntity(bovine, cemaBovine);
 
         assertThat(resultBovine.getDescription(), is(description));
         assertThat(resultBovine.getGenre(), is(genre));
@@ -101,7 +101,7 @@ class BovineMappingImplTest {
         cemaBovine.setEstablishmentCuig(establishmentCuig);
         cemaBovine.setTaggingDate(taggingDate);
 
-        CemaBovine resultBovine = bovineMapping.updateEntityWithDomain(bovine, cemaBovine);
+        CemaBovine resultBovine = bovineMapping.mapDomainToEntity(bovine, cemaBovine);
 
         assertThat(resultBovine.getDescription(), is(description));
         assertThat(resultBovine.getGenre(), is(genre));

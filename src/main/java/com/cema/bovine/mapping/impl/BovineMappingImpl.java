@@ -24,7 +24,7 @@ public class BovineMappingImpl implements BovineMapping {
     }
 
     @Override
-    public CemaBovine updateEntityWithDomain(Bovine mapBovine) {
+    public CemaBovine mapDomainToEntity(Bovine mapBovine) {
         CemaBovine bovine = new CemaBovine();
         bovine.setTag(mapBovine.getTag());
         bovine.setDescription(mapBovine.getDescription());
@@ -37,7 +37,7 @@ public class BovineMappingImpl implements BovineMapping {
 
 
     @Override
-    public CemaBovine updateEntityWithDomain(Bovine mapBovine, CemaBovine entityBovine) {
+    public CemaBovine mapDomainToEntity(Bovine mapBovine, CemaBovine entityBovine) {
         String description = StringUtils.hasText(mapBovine.getDescription()) ? mapBovine.getDescription() : entityBovine.getDescription();
         String genre = StringUtils.hasText(mapBovine.getGenre()) ? mapBovine.getGenre() : entityBovine.getGenre();
         Date taggingDate = mapBovine.getTaggingDate() != null ? mapBovine.getTaggingDate() : entityBovine.getTaggingDate();
