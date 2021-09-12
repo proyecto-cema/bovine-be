@@ -2,8 +2,8 @@ package com.cema.bovine.controllers;
 
 import com.cema.bovine.domain.Bovine;
 import com.cema.bovine.entities.CemaBovine;
-import com.cema.bovine.exceptions.BovineAlreadyExistsException;
-import com.cema.bovine.exceptions.BovineNotFoundException;
+import com.cema.bovine.exceptions.AlreadyExistsException;
+import com.cema.bovine.exceptions.NotFoundException;
 import com.cema.bovine.exceptions.UnauthorizedException;
 import com.cema.bovine.mapping.BovineMapping;
 import com.cema.bovine.repositories.BovineRepository;
@@ -56,7 +56,7 @@ public class BovineControllerTest {
     public void lookUpBovineByTagShouldAlwaysReturnBovineWhenExists() {
         CemaBovine cemaBovine = new CemaBovine();
         cemaBovine.setEstablishmentCuig(cuig);
-        Bovine bovine = new Bovine();
+        Bovine bovine = Bovine.builder().build();
         String tag = "123";
         when(bovineRepository.findCemaBovineByTagAndEstablishmentCuigIgnoreCase(tag, cuig)).thenReturn(cemaBovine);
         when(bovineMapping.mapEntityToDomain(cemaBovine)).thenReturn(bovine);
@@ -75,7 +75,7 @@ public class BovineControllerTest {
         when(authorizationService.getCurrentUserCuig()).thenReturn("otherCuig");
         CemaBovine cemaBovine = new CemaBovine();
         cemaBovine.setEstablishmentCuig(cuig);
-        Bovine bovine = new Bovine();
+        Bovine bovine = Bovine.builder().build();
         String tag = "123";
         when(bovineRepository.findCemaBovineByTagAndEstablishmentCuigIgnoreCase(tag, cuig)).thenReturn(cemaBovine);
         when(bovineMapping.mapEntityToDomain(cemaBovine)).thenReturn(bovine);
@@ -92,12 +92,12 @@ public class BovineControllerTest {
     public void lookUpBovineByTagShouldAlwaysReturnNotFoundWhenBovineDoesntExists() {
         CemaBovine cemaBovine = new CemaBovine();
         cemaBovine.setEstablishmentCuig(cuig);
-        Bovine bovine = new Bovine();
+        Bovine bovine = Bovine.builder().build();
         String tag = "123";
         when(bovineRepository.findCemaBovineByTagAndEstablishmentCuigIgnoreCase(tag, cuig)).thenReturn(cemaBovine);
         when(bovineMapping.mapEntityToDomain(cemaBovine)).thenReturn(bovine);
 
-        Exception exception = assertThrows(BovineNotFoundException.class, () -> {
+        Exception exception = assertThrows(NotFoundException.class, () -> {
             bovineController.lookUpBovineByTag("234", cuig);
         });
         String resultingMessage = exception.getMessage();
@@ -109,7 +109,7 @@ public class BovineControllerTest {
     public void updateBovineShouldAlwaysReturnOKWhenBovineUpdatedCorrectly() {
         CemaBovine cemaBovine = new CemaBovine();
         cemaBovine.setEstablishmentCuig(cuig);
-        Bovine bovine = new Bovine();
+        Bovine bovine = Bovine.builder().build();
         String tag = "123";
         bovine.setTag(tag);
 
@@ -129,7 +129,7 @@ public class BovineControllerTest {
         when(authorizationService.getCurrentUserCuig()).thenReturn("otherCuig");
         CemaBovine cemaBovine = new CemaBovine();
         cemaBovine.setEstablishmentCuig(cuig);
-        Bovine bovine = new Bovine();
+        Bovine bovine = Bovine.builder().build();
         String tag = "123";
         bovine.setTag(tag);
 
@@ -146,13 +146,13 @@ public class BovineControllerTest {
     @Test
     public void updateBovineShouldAlwaysReturnNotFoundWhenBovineDoesntExists() {
         CemaBovine cemaBovine = new CemaBovine();
-        Bovine bovine = new Bovine();
+        Bovine bovine = Bovine.builder().build();
         bovine.setEstablishmentCuig(cuig);
         String tag = "123";
         when(bovineRepository.findCemaBovineByTagAndEstablishmentCuigIgnoreCase(tag, cuig)).thenReturn(cemaBovine);
 
 
-        Exception exception = assertThrows(BovineNotFoundException.class, () -> {
+        Exception exception = assertThrows(NotFoundException.class, () -> {
             bovineController.updateBovine("234", cuig, bovine);
         });
         String resultingMessage = exception.getMessage();
@@ -163,7 +163,7 @@ public class BovineControllerTest {
     @Test
     public void registerBovineShouldAlwaysReturnCreatedWhenBovineAddedCorrectly() {
         CemaBovine cemaBovine = new CemaBovine();
-        Bovine bovine = new Bovine();
+        Bovine bovine = Bovine.builder().build();
         bovine.setEstablishmentCuig(cuig);
         when(bovineMapping.mapDomainToEntity(bovine)).thenReturn(cemaBovine);
 
@@ -177,7 +177,7 @@ public class BovineControllerTest {
     @Test
     public void registerBovineShouldAlwaysReturnUnprocessableEntityWhenBovineExists() {
         CemaBovine cemaBovine = new CemaBovine();
-        Bovine bovine = new Bovine();
+        Bovine bovine = Bovine.builder().build();
         bovine.setEstablishmentCuig(cuig);
         String tag = "123";
         cemaBovine.setTag(tag);
@@ -186,7 +186,7 @@ public class BovineControllerTest {
         when(bovineRepository.findCemaBovineByTagAndEstablishmentCuigIgnoreCase(tag, cuig)).thenReturn(cemaBovine);
         when(bovineMapping.mapDomainToEntity(bovine)).thenReturn(cemaBovine);
 
-        Exception exception = assertThrows(BovineAlreadyExistsException.class, () -> {
+        Exception exception = assertThrows(AlreadyExistsException.class, () -> {
             bovineController.registerBovine(bovine);
         });
 
@@ -200,7 +200,7 @@ public class BovineControllerTest {
     public void registerShouldThrowUnauthorizedExceptionWhenAnExternalCuigIsRequested() {
         String otherCuig = "000";
         CemaBovine cemaBovine = new CemaBovine();
-        Bovine bovine = new Bovine();
+        Bovine bovine = Bovine.builder().build();
         String tag = "123";
         bovine.setTag(tag);
         bovine.setEstablishmentCuig(otherCuig);
@@ -253,7 +253,7 @@ public class BovineControllerTest {
         String tag = "123";
         when(bovineRepository.findCemaBovineByTagAndEstablishmentCuigIgnoreCase(tag, cuig)).thenReturn(cemaBovine);
 
-        Exception exception = assertThrows(BovineNotFoundException.class, () -> {
+        Exception exception = assertThrows(NotFoundException.class, () -> {
             bovineController.deleteBovine("234", cuig);
         });
 
@@ -270,13 +270,13 @@ public class BovineControllerTest {
         CemaBovine cemaBovine1 = new CemaBovine();
         CemaBovine cemaBovine2 = new CemaBovine();
         CemaBovine cemaBovine3 = new CemaBovine();
-        Bovine bovine1 = new Bovine();
+        Bovine bovine1 = Bovine.builder().build();
         bovine1.setEstablishmentCuig(cuig);
         bovine1.setTag("11");
-        Bovine bovine2 = new Bovine();
+        Bovine bovine2 = Bovine.builder().build();
         bovine2.setEstablishmentCuig(cuig);
         bovine2.setTag("12");
-        Bovine bovine3 = new Bovine();
+        Bovine bovine3 = Bovine.builder().build();
         bovine3.setEstablishmentCuig(cuig);
         bovine3.setTag("13");
         bovineList.add(cemaBovine1);
@@ -321,13 +321,13 @@ public class BovineControllerTest {
         CemaBovine cemaBovine1 = new CemaBovine();
         CemaBovine cemaBovine2 = new CemaBovine();
         CemaBovine cemaBovine3 = new CemaBovine();
-        Bovine bovine1 = new Bovine();
+        Bovine bovine1 = Bovine.builder().build();
         bovine1.setEstablishmentCuig(cuig);
         bovine1.setTag("11");
-        Bovine bovine2 = new Bovine();
+        Bovine bovine2 = Bovine.builder().build();
         bovine2.setEstablishmentCuig(cuig);
         bovine2.setTag("12");
-        Bovine bovine3 = new Bovine();
+        Bovine bovine3 = Bovine.builder().build();
         bovine3.setEstablishmentCuig(otherCuig);
         bovine3.setTag("13");
         bovineList.add(cemaBovine1);
@@ -361,5 +361,61 @@ public class BovineControllerTest {
         assertThat(responseHeaders.getFirst("total-elements"), is("3"));
         assertThat(responseHeaders.getFirst("total-pages"), is("1"));
         assertThat(responseHeaders.getFirst("current-page"), is("0"));
+    }
+
+    @Test
+    public void listBovinesShouldReturnAllBovineInfoWhenTheUserIsAdmin(){
+        when(authorizationService.isAdmin()).thenReturn(true);
+        List<String> tags = new ArrayList<>();
+
+        List<CemaBovine> bovineList = new ArrayList<>();
+        CemaBovine cemaBovine1 = new CemaBovine();
+        CemaBovine cemaBovine2 = new CemaBovine();
+
+        Bovine bovine1 = Bovine.builder().build();
+        Bovine bovine2 = Bovine.builder().build();
+
+        bovineList.add(cemaBovine1);
+        bovineList.add(cemaBovine2);
+
+        when(bovineMapping.mapEntityToDomain(cemaBovine1)).thenReturn(bovine1);
+        when(bovineMapping.mapEntityToDomain(cemaBovine2)).thenReturn(bovine2);
+        when(bovineRepository.findCemaBovinesByTagIn(tags)).thenReturn(bovineList);
+
+        ResponseEntity<List<Bovine>> result = bovineController.listBovines(tags);
+
+        List<Bovine> bovines = result.getBody();
+
+        assertTrue(bovines.contains(bovine1));
+        assertTrue(bovines.contains(bovine2));
+    }
+
+    @Test
+    public void listBovinesShouldReturnBovinesInYourCuigInfoWhenTheUserIsNotAdmin(){
+        when(authorizationService.isAdmin()).thenReturn(false);
+        List<String> tags = new ArrayList<>();
+
+        List<CemaBovine> bovineList = new ArrayList<>();
+        CemaBovine cemaBovine1 = new CemaBovine();
+        cemaBovine1.setEstablishmentCuig(cuig);
+        CemaBovine cemaBovine2 = new CemaBovine();
+        cemaBovine2.setEstablishmentCuig("555");
+
+        Bovine bovine1 = Bovine.builder().build();
+        Bovine bovine2 = Bovine.builder().build();
+
+        bovineList.add(cemaBovine1);
+        bovineList.add(cemaBovine2);
+
+        when(bovineMapping.mapEntityToDomain(cemaBovine1)).thenReturn(bovine1);
+        when(bovineMapping.mapEntityToDomain(cemaBovine2)).thenReturn(bovine2);
+        when(bovineRepository.findCemaBovinesByTagIn(tags)).thenReturn(bovineList);
+
+        ResponseEntity<List<Bovine>> result = bovineController.listBovines(tags);
+
+        List<Bovine> bovines = result.getBody();
+
+        assertTrue(bovines.contains(bovine1));
+        assertFalse(bovines.contains(bovine2));
     }
 }

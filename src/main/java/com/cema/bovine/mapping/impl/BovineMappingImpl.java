@@ -1,52 +1,55 @@
 package com.cema.bovine.mapping.impl;
 
 import com.cema.bovine.domain.Bovine;
+import com.cema.bovine.entities.CemaBatch;
 import com.cema.bovine.entities.CemaBovine;
 import com.cema.bovine.mapping.BovineMapping;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class BovineMappingImpl implements BovineMapping {
 
     @Override
-    public Bovine mapEntityToDomain(CemaBovine mapBovine) {
-        Bovine bovine = new Bovine();
-        bovine.setTag(mapBovine.getTag());
-        bovine.setDescription(mapBovine.getDescription());
-        bovine.setGenre(mapBovine.getGenre());
-        bovine.setTaggingDate(mapBovine.getTaggingDate());
-        bovine.setEstablishmentCuig(mapBovine.getEstablishmentCuig());
-
-        return bovine;
+    public Bovine mapEntityToDomain(CemaBovine cemaBovine) {
+        List<String> batchNames = cemaBovine.getCemaBatches().stream().map(CemaBatch::getBatchName).collect(Collectors.toList());
+        return Bovine.builder()
+                .tag(cemaBovine.getTag())
+                .description(cemaBovine.getDescription())
+                .genre(cemaBovine.getGenre())
+                .taggingDate(cemaBovine.getTaggingDate())
+                .establishmentCuig(cemaBovine.getEstablishmentCuig())
+                .batchNames(batchNames)
+                .build();
     }
 
     @Override
-    public CemaBovine mapDomainToEntity(Bovine mapBovine) {
-        CemaBovine bovine = new CemaBovine();
-        bovine.setTag(mapBovine.getTag());
-        bovine.setDescription(mapBovine.getDescription());
-        bovine.setGenre(mapBovine.getGenre());
-        bovine.setTaggingDate(mapBovine.getTaggingDate());
-        bovine.setEstablishmentCuig(mapBovine.getEstablishmentCuig());
-
-        return bovine;
+    public CemaBovine mapDomainToEntity(Bovine bovine) {
+        CemaBovine cemaBovine = new CemaBovine();
+        cemaBovine.setTag(bovine.getTag());
+        cemaBovine.setDescription(bovine.getDescription());
+        cemaBovine.setGenre(bovine.getGenre());
+        cemaBovine.setTaggingDate(bovine.getTaggingDate());
+        cemaBovine.setEstablishmentCuig(bovine.getEstablishmentCuig());
+        return cemaBovine;
     }
 
 
     @Override
-    public CemaBovine mapDomainToEntity(Bovine mapBovine, CemaBovine entityBovine) {
-        String description = StringUtils.hasText(mapBovine.getDescription()) ? mapBovine.getDescription() : entityBovine.getDescription();
-        String genre = StringUtils.hasText(mapBovine.getGenre()) ? mapBovine.getGenre() : entityBovine.getGenre();
-        Date taggingDate = mapBovine.getTaggingDate() != null ? mapBovine.getTaggingDate() : entityBovine.getTaggingDate();
-        String establishmentCuig = StringUtils.hasText(mapBovine.getEstablishmentCuig()) ? mapBovine.getEstablishmentCuig() : entityBovine.getEstablishmentCuig();
-        entityBovine.setDescription(description);
-        entityBovine.setGenre(genre);
-        entityBovine.setTaggingDate(taggingDate);
-        entityBovine.setEstablishmentCuig(establishmentCuig);
+    public CemaBovine mapDomainToEntity(Bovine bovine, CemaBovine cemaBovine) {
+        String description = StringUtils.hasText(bovine.getDescription()) ? bovine.getDescription() : cemaBovine.getDescription();
+        String genre = StringUtils.hasText(bovine.getGenre()) ? bovine.getGenre() : cemaBovine.getGenre();
+        Date taggingDate = bovine.getTaggingDate() != null ? bovine.getTaggingDate() : cemaBovine.getTaggingDate();
+        String establishmentCuig = StringUtils.hasText(bovine.getEstablishmentCuig()) ? bovine.getEstablishmentCuig() : cemaBovine.getEstablishmentCuig();
+        cemaBovine.setDescription(description);
+        cemaBovine.setGenre(genre);
+        cemaBovine.setTaggingDate(taggingDate);
+        cemaBovine.setEstablishmentCuig(establishmentCuig);
 
-        return entityBovine;
+        return cemaBovine;
     }
 }

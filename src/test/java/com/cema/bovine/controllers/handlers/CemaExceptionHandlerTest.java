@@ -1,8 +1,8 @@
 package com.cema.bovine.controllers.handlers;
 
 import com.cema.bovine.domain.ErrorResponse;
-import com.cema.bovine.exceptions.BovineAlreadyExistsException;
-import com.cema.bovine.exceptions.BovineNotFoundException;
+import com.cema.bovine.exceptions.AlreadyExistsException;
+import com.cema.bovine.exceptions.NotFoundException;
 import com.cema.bovine.exceptions.UnauthorizedException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,7 +40,7 @@ class CemaExceptionHandlerTest {
     public void handleBovineNotFoundExceptionShouldReturnResponseEntityWithMessageAndStatusCode(){
         CemaExceptionHandler cemaExceptionHandler = new CemaExceptionHandler();
 
-        BovineNotFoundException ex = new BovineNotFoundException("Bovine 123 Not Found");
+        NotFoundException ex = new NotFoundException("Bovine 123 Not Found");
 
         ResponseEntity<Object> result = cemaExceptionHandler.handleBovineNotFoundException(ex, webRequest);
         ErrorResponse body = (ErrorResponse) result.getBody();
@@ -53,7 +53,7 @@ class CemaExceptionHandlerTest {
     public void handleBovineExistsExceptionShouldReturnResponseEntityWithMessageAndStatusCode(){
         CemaExceptionHandler cemaExceptionHandler = new CemaExceptionHandler();
 
-        BovineAlreadyExistsException ex = new BovineAlreadyExistsException("Bovine 123 already exists");
+        AlreadyExistsException ex = new AlreadyExistsException("Bovine 123 already exists");
 
         ResponseEntity<Object> result = cemaExceptionHandler.handleBovineAlreadyExistsException(ex, webRequest);
         ErrorResponse body = (ErrorResponse) result.getBody();

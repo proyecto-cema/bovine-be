@@ -1,13 +1,21 @@
 package com.cema.bovine.entities;
 
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "cema_bovine")
@@ -33,6 +41,14 @@ public class CemaBovine {
 
     @Column(name = "tagging_date")
     private Date taggingDate;
+
+    @ManyToMany(cascade = { CascadeType.PERSIST })
+    @JoinTable(
+            name = "bovine_batch",
+            joinColumns = { @JoinColumn(name = "bovine_id") },
+            inverseJoinColumns = { @JoinColumn(name = "batch_id") }
+    )
+    private Set<CemaBatch> cemaBatches = new HashSet<>();
 
     public Integer getId() {
         return id;
@@ -80,5 +96,23 @@ public class CemaBovine {
 
     public void setTaggingDate(Date taggingDate) {
         this.taggingDate = taggingDate;
+    }
+
+    public Set<CemaBatch> getCemaBatches() {
+        return cemaBatches;
+    }
+
+    public void setCemaBatches(Set<CemaBatch> cemaBatches) {
+        this.cemaBatches = cemaBatches;
+    }
+
+    public void addBatch(CemaBatch cemaBatch){
+        cemaBatches.add(cemaBatch);
+        cemaBatch.getCemaBovines().add(this);
+    }
+
+    public void removeBatch(CemaBatch cemaBatch){
+        cemaBatches.remove(cemaBatch);
+        cemaBatch.getCemaBovines().remove(this);
     }
 }
