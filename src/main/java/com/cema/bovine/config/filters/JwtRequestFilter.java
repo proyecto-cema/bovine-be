@@ -1,7 +1,7 @@
 package com.cema.bovine.config.filters;
 
 import com.cema.bovine.domain.User;
-import com.cema.users.domain.CemaUserDetails;
+import com.cema.bovine.domain.CemaUserDetails;
 import io.micrometer.core.instrument.util.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;

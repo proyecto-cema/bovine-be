@@ -2,7 +2,7 @@ package com.cema.bovine.services.authorization.impl;
 
 import com.cema.bovine.constants.Roles;
 import com.cema.bovine.services.authorization.AuthorizationService;
-import com.cema.users.domain.CemaUserDetails;
+import com.cema.bovine.domain.CemaUserDetails;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;

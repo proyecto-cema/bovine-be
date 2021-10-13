@@ -1,11 +1,21 @@
 package com.cema.bovine.domain;
 
+import com.cema.bovine.entities.CemaBatch;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
+@Builder
+@Getter
+@Setter
 public class Bovine {
 
     @ApiModelProperty(notes = "The tag attached to this bovine", example = "123")
@@ -22,44 +32,7 @@ public class Bovine {
     private String establishmentCuig;
     @ApiModelProperty(notes = "Date when the bovine was tagged")
     private Date taggingDate;
+    @ApiModelProperty(notes = "The batches this bovine belongs to", example = "[\"batch_1\",\"OtherBatch\",\"bigbatch\",\"Some_Batch\"]")
+    private List<String> batchNames;
 
-    public String getTag() {
-        return tag;
-    }
-
-    public void setTag(String tag) {
-        this.tag = tag;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getGenre() {
-        return genre;
-    }
-
-    public void setGenre(String genre) {
-        this.genre = genre;
-    }
-
-    public String getEstablishmentCuig() {
-        return establishmentCuig;
-    }
-
-    public void setEstablishmentCuig(String establishmentCuig) {
-        this.establishmentCuig = establishmentCuig;
-    }
-
-    public Date getTaggingDate() {
-        return taggingDate;
-    }
-
-    public void setTaggingDate(Date taggingDate) {
-        this.taggingDate = taggingDate;
-    }
 }

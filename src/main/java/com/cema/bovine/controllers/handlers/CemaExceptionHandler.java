@@ -1,8 +1,8 @@
 package com.cema.bovine.controllers.handlers;
 
 import com.cema.bovine.domain.ErrorResponse;
-import com.cema.bovine.exceptions.BovineAlreadyExistsException;
-import com.cema.bovine.exceptions.BovineNotFoundException;
+import com.cema.bovine.exceptions.AlreadyExistsException;
+import com.cema.bovine.exceptions.NotFoundException;
 import com.cema.bovine.exceptions.UnauthorizedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,15 +16,15 @@ import org.springframework.web.context.request.WebRequest;
 @ControllerAdvice
 public class CemaExceptionHandler {
 
-    @ExceptionHandler(BovineNotFoundException.class)
-    public final ResponseEntity<Object> handleBovineNotFoundException(BovineNotFoundException ex, WebRequest request) {
+    @ExceptionHandler(NotFoundException.class)
+    public final ResponseEntity<Object> handleBovineNotFoundException(NotFoundException ex, WebRequest request) {
 
         ErrorResponse error = new ErrorResponse(ex.getMessage(), request.toString());
         return new ResponseEntity(error, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(BovineAlreadyExistsException.class)
-    public final ResponseEntity<Object> handleBovineAlreadyExistsException(BovineAlreadyExistsException ex, WebRequest request) {
+    @ExceptionHandler(AlreadyExistsException.class)
+    public final ResponseEntity<Object> handleBovineAlreadyExistsException(AlreadyExistsException ex, WebRequest request) {
 
         ErrorResponse error = new ErrorResponse(ex.getMessage(), request.toString());
         return new ResponseEntity(error, HttpStatus.CONFLICT);

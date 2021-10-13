@@ -3,8 +3,8 @@ package com.cema.bovine.controllers;
 import com.cema.bovine.constants.Messages;
 import com.cema.bovine.domain.Bovine;
 import com.cema.bovine.entities.CemaBovine;
-import com.cema.bovine.exceptions.BovineAlreadyExistsException;
-import com.cema.bovine.exceptions.BovineNotFoundException;
+import com.cema.bovine.exceptions.AlreadyExistsException;
+import com.cema.bovine.exceptions.NotFoundException;
 import com.cema.bovine.exceptions.UnauthorizedException;
 import com.cema.bovine.mapping.BovineMapping;
 import com.cema.bovine.repositories.BovineRepository;
@@ -77,13 +77,13 @@ public class BovineController {
                     example = "312")
             @RequestParam(value = "cuig") String cuig) {
 
-        if(!authorizationService.isAdmin()){
+        if (!authorizationService.isAdmin()) {
             cuig = authorizationService.getCurrentUserCuig();
         }
         LOG.info("Request for bovine with tag {} and cuig {}", tag, cuig);
         CemaBovine cemaBovine = bovineRepository.findCemaBovineByTagAndEstablishmentCuigIgnoreCase(tag, cuig);
         if (cemaBovine == null) {
-            throw new BovineNotFoundException(String.format("Bovine with tag %s doesn't exits", tag));
+            throw new NotFoundException(String.format("Bovine with tag %s doesn't exits", tag));
         }
         Bovine bovine = bovineMapping.mapEntityToDomain(cemaBovine);
 
@@ -110,7 +110,7 @@ public class BovineController {
         CemaBovine existsBovine = bovineRepository.findCemaBovineByTagAndEstablishmentCuigIgnoreCase(bovine.getTag(), cuig);
         if (existsBovine != null) {
             LOG.info("Bovine tag already exists");
-            throw new BovineAlreadyExistsException(String.format("The bovine with tag %s already exists", bovine.getTag()));
+            throw new AlreadyExistsException(String.format("The bovine with tag %s already exists", bovine.getTag()));
         }
 
         CemaBovine cemaBovine = bovineMapping.mapDomainToEntity(bovine);
@@ -139,7 +139,7 @@ public class BovineController {
                     value = "The bovine data we are modifying")
             @RequestBody Bovine bovine) {
 
-        if(!authorizationService.isAdmin()){
+        if (!authorizationService.isAdmin()) {
             cuig = authorizationService.getCurrentUserCuig();
         }
         LOG.info("Request to modify bovine with tag {} and cuig {}", tag, cuig);
@@ -147,7 +147,7 @@ public class BovineController {
 
         if (cemaBovine == null) {
             LOG.info("Bovine with tag {} and cuig {} doesn't exists", tag, cuig);
-            throw new BovineNotFoundException(String.format("Bovine with tag %s doesn't exits", tag));
+            throw new NotFoundException(String.format("Bovine with tag %s doesn't exits", tag));
         }
 
         cemaBovine = bovineMapping.mapDomainToEntity(bovine, cemaBovine);
@@ -173,7 +173,7 @@ public class BovineController {
                     example = "312")
             @RequestParam(value = "cuig") String cuig) {
 
-        if(!authorizationService.isAdmin()){
+        if (!authorizationService.isAdmin()) {
             cuig = authorizationService.getCurrentUserCuig();
         }
         LOG.info("Request to delete bovine with tag {} and cuig {}", tag, cuig);
@@ -184,7 +184,7 @@ public class BovineController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         LOG.info("Not found");
-        throw new BovineNotFoundException(String.format("Bovine %s doesn't exits", tag));
+        throw new NotFoundException(String.format("Bovine %s doesn't exits", tag));
     }
 
     @ApiOperation(value = "Retrieve a list of bovines matching the sent data", response = Bovine.class)
@@ -193,8 +193,7 @@ public class BovineController {
                     @ResponseHeader(name = "total-elements", response = String.class, description = "Total number of search results"),
                     @ResponseHeader(name = "total-pages", response = String.class, description = "Total number of pages to navigate"),
                     @ResponseHeader(name = "current-page", response = String.class, description = "The page being returned, zero indexed")
-            }),
-            @ApiResponse(code = 422, message = "Invalid search, all parameters blank")
+            })
     })
     @GetMapping(value = BASE_URL + "search", produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<List<Bovine>> searchBovines(
@@ -244,5 +243,29 @@ public class BovineController {
 
         return ResponseEntity.ok().headers(responseHeaders).body(mappedBovines);
     }
+
+    @ApiOperation(value = "Retrieve a list of bovines from a list of tags", response = Bovine.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully found bovines")
+    })
+    @PostMapping(value = BASE_URL + "list", produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<List<Bovine>> listBovines(
+            @ApiParam(value = "Bovines to list. If not found will be ignored")
+            @RequestBody List<String> bovineTags) {
+
+        final String userCuig = authorizationService.getCurrentUserCuig();
+
+        LOG.info("Listing bovines {} for cuig {}", userCuig, bovineTags);
+        List<CemaBovine> cemaBovines = bovineRepository.findCemaBovinesByTagIn(bovineTags);
+        if(!authorizationService.isAdmin()) {
+            cemaBovines = cemaBovines.stream()
+                    .filter(cemaBovine -> cemaBovine.getEstablishmentCuig().equalsIgnoreCase(userCuig))
+                    .collect(Collectors.toList());
+        }
+        List<Bovine> bovines = cemaBovines.stream().map(bovineMapping::mapEntityToDomain).collect(Collectors.toList());
+        return new ResponseEntity<>(bovines, HttpStatus.OK);
+    }
+
+
 
 }

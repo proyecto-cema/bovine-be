@@ -1,4 +1,4 @@
-package com.cema.users.domain;
+package com.cema.bovine.domain;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
