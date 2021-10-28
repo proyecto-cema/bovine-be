@@ -4,6 +4,7 @@ import com.cema.bovine.domain.ErrorResponse;
 import com.cema.bovine.exceptions.AlreadyExistsException;
 import com.cema.bovine.exceptions.NotFoundException;
 import com.cema.bovine.exceptions.UnauthorizedException;
+import com.cema.bovine.exceptions.ValidationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -54,5 +55,11 @@ public class CemaExceptionHandler {
                     new ErrorResponse.Violation(fieldError.getField(), fieldError.getDefaultMessage()));
         }
         return new ResponseEntity(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ValidationException.class)
+    public final ResponseEntity<ErrorResponse> handleValidationException(ValidationException ex, WebRequest request) {
+        ErrorResponse error = new ErrorResponse(ex.getMessage(), request.toString());
+        return new ResponseEntity(error, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 }
