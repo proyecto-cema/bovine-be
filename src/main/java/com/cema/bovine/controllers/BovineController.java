@@ -10,6 +10,7 @@ import com.cema.bovine.mapping.BovineMapping;
 import com.cema.bovine.repositories.BovineRepository;
 import com.cema.bovine.services.authorization.AuthorizationService;
 import com.cema.bovine.services.database.DatabaseService;
+import com.cema.bovine.services.validation.BovineValidationService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -52,13 +53,16 @@ public class BovineController {
     private final BovineMapping bovineMapping;
     private final DatabaseService databaseService;
     private final AuthorizationService authorizationService;
+    private final BovineValidationService bovineValidationService;
 
     public BovineController(BovineRepository bovineRepository, BovineMapping bovineMapping,
-                            DatabaseService databaseService, AuthorizationService authorizationService) {
+                            DatabaseService databaseService, AuthorizationService authorizationService,
+                            BovineValidationService bovineValidationService) {
         this.bovineRepository = bovineRepository;
         this.bovineMapping = bovineMapping;
         this.databaseService = databaseService;
         this.authorizationService = authorizationService;
+        this.bovineValidationService = bovineValidationService;
     }
 
     @ApiOperation(value = "Retrieve bovine from tag sent data", response = Bovine.class)
@@ -113,6 +117,8 @@ public class BovineController {
             throw new AlreadyExistsException(String.format("The bovine with tag %s already exists", bovine.getTag()));
         }
 
+        bovineValidationService.validateBovineCreation(bovine);
+
         CemaBovine cemaBovine = bovineMapping.mapDomainToEntity(bovine);
 
         bovineRepository.save(cemaBovine);
@@ -149,6 +155,8 @@ public class BovineController {
             LOG.info("Bovine with tag {} and cuig {} doesn't exists", tag, cuig);
             throw new NotFoundException(String.format("Bovine with tag %s doesn't exits", tag));
         }
+
+        bovineValidationService.validateBovineUpdate(bovine, cemaBovine);
 
         cemaBovine = bovineMapping.mapDomainToEntity(bovine, cemaBovine);
 

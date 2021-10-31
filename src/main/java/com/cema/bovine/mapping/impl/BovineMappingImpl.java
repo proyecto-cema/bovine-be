@@ -20,9 +20,11 @@ public class BovineMappingImpl implements BovineMapping {
         return Bovine.builder()
                 .tag(cemaBovine.getTag())
                 .description(cemaBovine.getDescription())
-                .genre(cemaBovine.getGenre())
+                .genre(StringUtils.capitalize(cemaBovine.getGenre()))
                 .taggingDate(cemaBovine.getTaggingDate())
                 .establishmentCuig(cemaBovine.getEstablishmentCuig())
+                .status(StringUtils.capitalize(cemaBovine.getStatus()))
+                .category(StringUtils.capitalize(cemaBovine.getCategory()))
                 .batchNames(batchNames)
                 .build();
     }
@@ -35,6 +37,8 @@ public class BovineMappingImpl implements BovineMapping {
         cemaBovine.setGenre(bovine.getGenre());
         cemaBovine.setTaggingDate(bovine.getTaggingDate());
         cemaBovine.setEstablishmentCuig(bovine.getEstablishmentCuig());
+        cemaBovine.setStatus(bovine.getStatus());
+        cemaBovine.setCategory(bovine.getCategory());
         return cemaBovine;
     }
 
@@ -42,13 +46,18 @@ public class BovineMappingImpl implements BovineMapping {
     @Override
     public CemaBovine mapDomainToEntity(Bovine bovine, CemaBovine cemaBovine) {
         String description = StringUtils.hasText(bovine.getDescription()) ? bovine.getDescription() : cemaBovine.getDescription();
-        String genre = StringUtils.hasText(bovine.getGenre()) ? bovine.getGenre() : cemaBovine.getGenre();
+        String genre = StringUtils.hasText(bovine.getGenre()) ? StringUtils.capitalize(bovine.getGenre()) : cemaBovine.getGenre();
         Date taggingDate = bovine.getTaggingDate() != null ? bovine.getTaggingDate() : cemaBovine.getTaggingDate();
         String establishmentCuig = StringUtils.hasText(bovine.getEstablishmentCuig()) ? bovine.getEstablishmentCuig() : cemaBovine.getEstablishmentCuig();
+        String status = StringUtils.hasText(bovine.getStatus()) ? StringUtils.capitalize(bovine.getStatus()) : cemaBovine.getStatus();
+        String category = StringUtils.hasText(bovine.getCategory()) ? StringUtils.capitalize(bovine.getCategory()) : cemaBovine.getCategory();
+
         cemaBovine.setDescription(description);
         cemaBovine.setGenre(genre);
         cemaBovine.setTaggingDate(taggingDate);
         cemaBovine.setEstablishmentCuig(establishmentCuig);
+        cemaBovine.setStatus(status);
+        cemaBovine.setCategory(category);
 
         return cemaBovine;
     }

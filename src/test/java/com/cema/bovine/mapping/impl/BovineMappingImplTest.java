@@ -2,6 +2,7 @@ package com.cema.bovine.mapping.impl;
 
 
 import com.cema.bovine.domain.Bovine;
+import com.cema.bovine.constants.Categories;
 import com.cema.bovine.entities.CemaBatch;
 import com.cema.bovine.entities.CemaBovine;
 import com.cema.bovine.mapping.BovineMapping;
@@ -23,9 +24,10 @@ class BovineMappingImplTest {
     public void mapEntityCemaBovineToDomainBovineShouldReturnCorrectDomainBovine(){
         String tag = "123";
         String description = "black";
-        String genre = "male";
+        String genre = "Male";
         String batch1 = "batch1";
         String batch2 = "batch2";
+        String category = "Toro";
         CemaBatch cemaBatch1 = new CemaBatch();
         cemaBatch1.setBatchName(batch1);
         CemaBatch cemaBatch2 = new CemaBatch();
@@ -39,6 +41,7 @@ class BovineMappingImplTest {
         cemaBovine.setGenre(genre);
         cemaBovine.setTaggingDate(taggingDate);
         cemaBovine.setCemaBatches(cemaBatches);
+        cemaBovine.setCategory(category);
 
         Bovine resultBovine = bovineMapping.mapEntityToDomain(cemaBovine);
 
@@ -48,6 +51,7 @@ class BovineMappingImplTest {
         assertThat(resultBovine.getTaggingDate(), is(taggingDate));
         assertTrue(resultBovine.getBatchNames().contains(batch1));
         assertTrue(resultBovine.getBatchNames().contains(batch2));
+        assertThat(resultBovine.getCategory(), is(category));
     }
 
     @Test
@@ -55,6 +59,7 @@ class BovineMappingImplTest {
         String tag = "123";
         String description = "black";
         String genre = "female";
+        String category = "Vaca";
         Date taggingDate = new Date();
 
         Bovine bovine = Bovine.builder().build();
@@ -62,6 +67,7 @@ class BovineMappingImplTest {
         bovine.setTag(tag);
         bovine.setGenre(genre);
         bovine.setTaggingDate(taggingDate);
+        bovine.setCategory(category);
 
         CemaBovine resultBovine = bovineMapping.mapDomainToEntity(bovine);
 
@@ -69,6 +75,7 @@ class BovineMappingImplTest {
         assertThat(resultBovine.getDescription(), is(description));
         assertThat(resultBovine.getGenre(), is(genre));
         assertThat(resultBovine.getTaggingDate(), is(taggingDate));
+        assertThat(resultBovine.getCategory(), is(category));
 
     }
 
@@ -76,7 +83,7 @@ class BovineMappingImplTest {
     public void updateDomainWithEntityShouldUpdateAllPresentFields(){
         String tag = "123";
         String description = "black";
-        String genre = "female";
+        String genre = "Female";
         String establishmentCuig = "establishmentCuig";
         Date taggingDate = new Date();
 

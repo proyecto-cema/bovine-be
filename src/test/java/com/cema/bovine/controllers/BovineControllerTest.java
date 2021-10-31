@@ -9,6 +9,7 @@ import com.cema.bovine.mapping.BovineMapping;
 import com.cema.bovine.repositories.BovineRepository;
 import com.cema.bovine.services.authorization.AuthorizationService;
 import com.cema.bovine.services.database.DatabaseService;
+import com.cema.bovine.services.validation.BovineValidationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -26,6 +27,7 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;
 
@@ -39,6 +41,8 @@ public class BovineControllerTest {
     private DatabaseService databaseService;
     @Mock
     private AuthorizationService authorizationService;
+    @Mock
+    private BovineValidationService bovineValidationService;
 
     private BovineController bovineController;
 
@@ -49,7 +53,7 @@ public class BovineControllerTest {
         openMocks(this);
         when(authorizationService.isOnTheSameEstablishment(cuig)).thenReturn(true);
         when(authorizationService.getCurrentUserCuig()).thenReturn(cuig);
-        bovineController = new BovineController(bovineRepository, bovineMapping, databaseService, authorizationService);
+        bovineController = new BovineController(bovineRepository, bovineMapping, databaseService, authorizationService, bovineValidationService);
     }
 
     @Test

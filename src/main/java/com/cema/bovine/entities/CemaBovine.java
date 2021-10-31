@@ -42,6 +42,15 @@ public class CemaBovine {
     @Column(name = "tagging_date")
     private Date taggingDate;
 
+    @Column(name = "birth_date")
+    private Date birthDate;
+
+    @Column(name = "status")
+    private String status;
+
+    @Column(name = "category")
+    private String category;
+
     @ManyToMany(cascade = { CascadeType.PERSIST })
     @JoinTable(
             name = "bovine_batch",
@@ -114,5 +123,29 @@ public class CemaBovine {
     public void removeBatch(CemaBatch cemaBatch){
         cemaBatches.remove(cemaBatch);
         cemaBatch.getCemaBovines().remove(this);
+    }
+
+    public Date getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(Date birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }
