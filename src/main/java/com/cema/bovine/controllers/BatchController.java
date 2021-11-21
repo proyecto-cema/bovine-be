@@ -16,13 +16,12 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import io.swagger.annotations.Example;
-import io.swagger.annotations.ExampleProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -60,6 +59,34 @@ public class BatchController {
         this.authorizationService = authorizationService;
     }
 
+    @ApiOperation(value = "Validate a batch by batch name", response = Batch.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = "Batch is valid"),
+            @ApiResponse(code = 404, message = "Batch not found")
+    })
+    @GetMapping(value = BASE_URL + "validate/{batch_name}", produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<Void> validateBatchByName(
+            @ApiParam(
+                    value = "The name of the batch to validate.",
+                    example = "123")
+            @PathVariable("batch_name") String name,
+            @ApiParam(
+                    value = "The cuig of the establishment of the batch. If the user is not admin will be ignored.",
+                    example = "312")
+            @RequestParam(value = "cuig", required = false) String cuig) {
+
+        if (!authorizationService.isAdmin() || !StringUtils.hasLength(cuig)) {
+            cuig = authorizationService.getCurrentUserCuig();
+        }
+        LOG.info("Request for batch with name {} and cuig {}", name, cuig);
+        CemaBatch cemaBatch = batchRepository.findCemaBatchByBatchNameAndEstablishmentCuigIgnoreCase(name, cuig);
+        if (cemaBatch == null) {
+            throw new NotFoundException(String.format("Batch with name %s doesn't exits", name));
+        }
+
+        return ResponseEntity.noContent().build();
+    }
+
     @ApiOperation(value = "Retrieve a batch by batch name", response = Batch.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully found Batch"),
@@ -74,9 +101,9 @@ public class BatchController {
             @ApiParam(
                     value = "The cuig of the establishment of the batch. If the user is not admin will be ignored.",
                     example = "312")
-            @RequestParam(value = "cuig") String cuig) {
+            @RequestParam(value = "cuig", required = false) String cuig) {
 
-        if (!authorizationService.isAdmin()) {
+        if (!authorizationService.isAdmin() || !StringUtils.hasLength(cuig)) {
             cuig = authorizationService.getCurrentUserCuig();
         }
         LOG.info("Request for batch with name {} and cuig {}", name, cuig);
@@ -131,9 +158,9 @@ public class BatchController {
             @ApiParam(
                     value = "The cuig of the establishment of the batch. If the user is not admin will be ignored.",
                     example = "312")
-            @RequestParam(value = "cuig") String cuig) {
+            @RequestParam(value = "cuig", required = false) String cuig) {
 
-        if (!authorizationService.isAdmin()) {
+        if (!authorizationService.isAdmin() || !StringUtils.hasLength(cuig)) {
             cuig = authorizationService.getCurrentUserCuig();
         }
         LOG.info("Request to delete batch with name {} and cuig {}", batchName, cuig);
@@ -161,11 +188,11 @@ public class BatchController {
             @ApiParam(
                     value = "The cuig of the establishment of the batch. If the user is not admin will be ignored.",
                     example = "312")
-            @RequestParam(value = "cuig") String cuig,
+            @RequestParam(value = "cuig", required = false) String cuig,
             @ApiParam(value = "Bovine tags to add. If not found will be ignored", example = "[\"1234\",\"1235\",\"2222\",\"3333\"]")
             @RequestBody List<String> bovineTags) {
 
-        if (!authorizationService.isAdmin()) {
+        if (!authorizationService.isAdmin() || !StringUtils.hasLength(cuig)) {
             cuig = authorizationService.getCurrentUserCuig();
         }
         CemaBatch cemaBatch = batchRepository.findCemaBatchByBatchNameAndEstablishmentCuigIgnoreCase(batchName, cuig);
@@ -191,11 +218,11 @@ public class BatchController {
             @ApiParam(
                     value = "The cuig of the establishment of the batch. If the user is not admin will be ignored.",
                     example = "312")
-            @RequestParam(value = "cuig") String cuig,
+            @RequestParam(value = "cuig", required = false) String cuig,
             @ApiParam(value = "Bovines to add. If not found will be ignored", example = "[\"1234\",\"1235\",\"2222\",\"3333\"]")
             @RequestBody List<String> bovineTags) {
 
-        if (!authorizationService.isAdmin()) {
+        if (!authorizationService.isAdmin() || !StringUtils.hasLength(cuig)) {
             cuig = authorizationService.getCurrentUserCuig();
         }
         CemaBatch cemaBatch = batchRepository.findCemaBatchByBatchNameAndEstablishmentCuigIgnoreCase(batchName, cuig);

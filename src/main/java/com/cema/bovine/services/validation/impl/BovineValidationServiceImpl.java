@@ -22,8 +22,16 @@ public class BovineValidationServiceImpl implements BovineValidationService {
     }
 
     @Override
+    public void validateBovineForUsage(Bovine bovine) {
+        String status = StringUtils.capitalize(bovine.getStatus());
+        if (Categories.BOVINE_UNUSABLE_STATES.contains(status)) {
+            throw new ValidationException(String.format("Bovine unusable when in status %s", status));
+        }
+    }
+
+    @Override
     public void validateBovineCreation(Bovine bovine) {
-        String state = bovine.getStatus();
+        String state = StringUtils.capitalize(bovine.getStatus());
         String category = StringUtils.capitalize(bovine.getCategory());
         String genre = bovine.getGenre();
 
@@ -38,7 +46,7 @@ public class BovineValidationServiceImpl implements BovineValidationService {
 
     @Override
     public void validateBovineUpdate(Bovine bovine, CemaBovine cemaBovine) {
-        String currentState = cemaBovine.getStatus();
+        String currentState = StringUtils.capitalize(cemaBovine.getStatus());
         String currentCategory = StringUtils.capitalize(cemaBovine.getCategory());
         String currentGenre = cemaBovine.getGenre();
 

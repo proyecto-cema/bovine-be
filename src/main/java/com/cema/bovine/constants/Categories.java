@@ -15,6 +15,7 @@ public class Categories {
     public static final Set<String> TERNERO_ALLOWED_STATES = ImmutableSet.of(Status.MAMANDO, Status.DESTETADO, Status.MUERTO, Status.VENDIDO);
     public static final Set<String> VACA_ALLOWED_STATES = ImmutableSet.of(Status.SIN_PRENEZ, Status.PRENADA, Status.MUERTO, Status.VENDIDO);
     public static final Set<String> TORO_ALLOWED_STATES = ImmutableSet.of(Status.EN_SERVICIO, Status.FUERA_DE_SERVICIO, Status.MUERTO, Status.VENDIDO);
+    public static final Set<String> BOVINE_UNUSABLE_STATES = ImmutableSet.of(Status.MUERTO, Status.VENDIDO);
 
 
     public static Set<String> allowedStatesOf(String category) {
