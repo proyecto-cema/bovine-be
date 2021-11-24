@@ -7,7 +7,6 @@ import com.cema.bovine.mapping.BatchMapping;
 import com.cema.bovine.repositories.BatchRepository;
 import com.cema.bovine.repositories.BovineRepository;
 import com.cema.bovine.services.database.DatabaseService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
@@ -46,7 +45,7 @@ public class DatabaseServiceImpl implements DatabaseService {
     }
 
     @Override
-    public CemaBatch saveCemaBatch(Batch batch){
+    public CemaBatch saveCemaBatch(Batch batch) {
         CemaBatch cemaBatch = batchMapping.mapDomainToEntity(batch);
         List<String> bovineTags = batch.getBovineTags();
         List<CemaBovine> cemaBovines = bovineRepository.findCemaBovinesByTagIn(bovineTags);
@@ -56,9 +55,9 @@ public class DatabaseServiceImpl implements DatabaseService {
     }
 
     @Override
-    public void deleteBatch(CemaBatch cemaBatch){
+    public void deleteBatch(CemaBatch cemaBatch) {
         List<CemaBovine> cemaBovineList = new ArrayList<>(cemaBatch.getCemaBovines());
-        for (CemaBovine cemaBovine: cemaBovineList) {
+        for (CemaBovine cemaBovine : cemaBovineList) {
             cemaBovine.removeBatch(cemaBatch);
         }
         bovineRepository.saveAll(cemaBovineList);
@@ -66,18 +65,18 @@ public class DatabaseServiceImpl implements DatabaseService {
     }
 
     @Override
-    public CemaBatch addBovinesToBatch(CemaBatch cemaBatch, List<String> bobineTags){
+    public CemaBatch addBovinesToBatch(CemaBatch cemaBatch, List<String> bobineTags) {
         List<CemaBovine> cemaBovines = bovineRepository.findCemaBovinesByTagIn(bobineTags);
-        for (CemaBovine cemaBovine: cemaBovines) {
+        for (CemaBovine cemaBovine : cemaBovines) {
             cemaBovine.addBatch(cemaBatch);
         }
         return batchRepository.save(cemaBatch);
     }
 
     @Override
-    public CemaBatch removeBovinesFromBatch(CemaBatch cemaBatch, List<String> bobineTags){
+    public CemaBatch removeBovinesFromBatch(CemaBatch cemaBatch, List<String> bobineTags) {
         List<CemaBovine> cemaBovines = bovineRepository.findCemaBovinesByTagIn(bobineTags);
-        for (CemaBovine cemaBovine: cemaBovines) {
+        for (CemaBovine cemaBovine : cemaBovines) {
             cemaBovine.removeBatch(cemaBatch);
         }
         return batchRepository.save(cemaBatch);

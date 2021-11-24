@@ -24,6 +24,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -65,6 +66,38 @@ public class BovineController {
         this.bovineValidationService = bovineValidationService;
     }
 
+    @ApiOperation(value = "Validate a bovine", response = Bovine.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = "Bovine is valid"),
+            @ApiResponse(code = 404, message = "Bovine not found"),
+            @ApiResponse(code = 422, message = "Bovine is not available")
+    })
+    @GetMapping(value = BASE_URL + "validate/{tag}", produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<Void> validateBovineByTag(
+            @ApiParam(
+                    value = "The tag of the bovine to validate.",
+                    example = "123")
+            @PathVariable("tag") String tag,
+            @ApiParam(
+                    value = "The cuig of the establishment of the bovine. If the user is not admin will be ignored.",
+                    example = "312")
+            @RequestParam(value = "cuig", required = false) String cuig) {
+
+        if (!authorizationService.isAdmin() || !StringUtils.hasLength(cuig)) {
+            cuig = authorizationService.getCurrentUserCuig();
+        }
+        LOG.info("Request for bovine with tag {} and cuig {}", tag, cuig);
+        CemaBovine cemaBovine = bovineRepository.findCemaBovineByTagAndEstablishmentCuigIgnoreCase(tag, cuig);
+        if (cemaBovine == null) {
+            throw new NotFoundException(String.format("Bovine with tag %s doesn't exits", tag));
+        }
+        Bovine bovine = bovineMapping.mapEntityToDomain(cemaBovine);
+
+        bovineValidationService.validateBovineForUsage(bovine);
+
+        return ResponseEntity.noContent().build();
+    }
+
     @ApiOperation(value = "Retrieve bovine from tag sent data", response = Bovine.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully found bovine"),
@@ -79,9 +112,9 @@ public class BovineController {
             @ApiParam(
                     value = "The cuig of the establishment of the bovine. If the user is not admin will be ignored.",
                     example = "312")
-            @RequestParam(value = "cuig") String cuig) {
+            @RequestParam(value = "cuig", required = false) String cuig) {
 
-        if (!authorizationService.isAdmin()) {
+        if (!authorizationService.isAdmin() || !StringUtils.hasLength(cuig)) {
             cuig = authorizationService.getCurrentUserCuig();
         }
         LOG.info("Request for bovine with tag {} and cuig {}", tag, cuig);
@@ -140,12 +173,12 @@ public class BovineController {
             @ApiParam(
                     value = "The cuig of the establishment of the bovine. If the user is not admin will be ignored.",
                     example = "312")
-            @RequestParam(value = "cuig") String cuig,
+            @RequestParam(value = "cuig", required = false) String cuig,
             @ApiParam(
                     value = "The bovine data we are modifying")
             @RequestBody Bovine bovine) {
 
-        if (!authorizationService.isAdmin()) {
+        if (!authorizationService.isAdmin() || !StringUtils.hasLength(cuig)) {
             cuig = authorizationService.getCurrentUserCuig();
         }
         LOG.info("Request to modify bovine with tag {} and cuig {}", tag, cuig);
@@ -179,9 +212,9 @@ public class BovineController {
             @ApiParam(
                     value = "The cuig of the establishment of the bovine. If the user is not admin will be ignored.",
                     example = "312")
-            @RequestParam(value = "cuig") String cuig) {
+            @RequestParam(value = "cuig", required = false) String cuig) {
 
-        if (!authorizationService.isAdmin()) {
+        if (!authorizationService.isAdmin() || !StringUtils.hasLength(cuig)) {
             cuig = authorizationService.getCurrentUserCuig();
         }
         LOG.info("Request to delete bovine with tag {} and cuig {}", tag, cuig);
