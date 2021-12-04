@@ -9,6 +9,7 @@ import com.cema.bovine.exceptions.NotFoundException;
 import com.cema.bovine.exceptions.UnauthorizedException;
 import com.cema.bovine.mapping.BatchMapping;
 import com.cema.bovine.repositories.BatchRepository;
+import com.cema.bovine.services.administration.AdministrationClientService;
 import com.cema.bovine.services.authorization.AuthorizationService;
 import com.cema.bovine.services.database.DatabaseService;
 import io.swagger.annotations.Api;
@@ -50,13 +51,15 @@ public class BatchController {
     private final BatchMapping batchMapping;
     private final DatabaseService databaseService;
     private final AuthorizationService authorizationService;
+    private final AdministrationClientService administrationClientService;
 
-    public BatchController(BatchRepository batchRepository, BatchMapping batchMapping,
-                           DatabaseService databaseService, AuthorizationService authorizationService) {
+    public BatchController(BatchRepository batchRepository, BatchMapping batchMapping, DatabaseService databaseService,
+                           AuthorizationService authorizationService, AdministrationClientService administrationClientService) {
         this.batchRepository = batchRepository;
         this.batchMapping = batchMapping;
         this.databaseService = databaseService;
         this.authorizationService = authorizationService;
+        this.administrationClientService = administrationClientService;
     }
 
     @ApiOperation(value = "Validate a batch by batch name", response = Batch.class)
@@ -138,6 +141,7 @@ public class BatchController {
             LOG.info("Batch already exists");
             throw new AlreadyExistsException(String.format("The batch with name %s already exists", batch.getBatchName()));
         }
+        administrationClientService.validateEstablishment(cuig);
 
         databaseService.saveCemaBatch(batch);
 
@@ -254,5 +258,4 @@ public class BatchController {
 
         return new ResponseEntity<>(batches, HttpStatus.OK);
     }
-
 }

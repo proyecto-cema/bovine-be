@@ -25,6 +25,7 @@ public class BovineMappingImpl implements BovineMapping {
                 .establishmentCuig(cemaBovine.getEstablishmentCuig())
                 .status(StringUtils.capitalize(cemaBovine.getStatus()))
                 .category(StringUtils.capitalize(cemaBovine.getCategory()))
+                .birthDate(cemaBovine.getBirthDate())
                 .batchNames(batchNames)
                 .build();
     }
@@ -39,6 +40,7 @@ public class BovineMappingImpl implements BovineMapping {
         cemaBovine.setEstablishmentCuig(bovine.getEstablishmentCuig());
         cemaBovine.setStatus(bovine.getStatus());
         cemaBovine.setCategory(bovine.getCategory());
+        cemaBovine.setBirthDate(bovine.getBirthDate());
         return cemaBovine;
     }
 
@@ -48,6 +50,7 @@ public class BovineMappingImpl implements BovineMapping {
         String description = StringUtils.hasText(bovine.getDescription()) ? bovine.getDescription() : cemaBovine.getDescription();
         String genre = StringUtils.hasText(bovine.getGenre()) ? StringUtils.capitalize(bovine.getGenre()) : cemaBovine.getGenre();
         Date taggingDate = bovine.getTaggingDate() != null ? bovine.getTaggingDate() : cemaBovine.getTaggingDate();
+        Date birthDate = bovine.getBirthDate() != null ? bovine.getBirthDate() : cemaBovine.getBirthDate();
         String establishmentCuig = StringUtils.hasText(bovine.getEstablishmentCuig()) ? bovine.getEstablishmentCuig() : cemaBovine.getEstablishmentCuig();
         String status = StringUtils.hasText(bovine.getStatus()) ? StringUtils.capitalize(bovine.getStatus()) : cemaBovine.getStatus();
         String category = StringUtils.hasText(bovine.getCategory()) ? StringUtils.capitalize(bovine.getCategory()) : cemaBovine.getCategory();
@@ -58,6 +61,7 @@ public class BovineMappingImpl implements BovineMapping {
         cemaBovine.setEstablishmentCuig(establishmentCuig);
         cemaBovine.setStatus(status);
         cemaBovine.setCategory(category);
+        cemaBovine.setBirthDate(birthDate);
 
         return cemaBovine;
     }

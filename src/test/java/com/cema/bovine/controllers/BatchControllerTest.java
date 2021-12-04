@@ -8,6 +8,7 @@ import com.cema.bovine.exceptions.NotFoundException;
 import com.cema.bovine.exceptions.UnauthorizedException;
 import com.cema.bovine.mapping.BatchMapping;
 import com.cema.bovine.repositories.BatchRepository;
+import com.cema.bovine.services.administration.AdministrationClientService;
 import com.cema.bovine.services.authorization.AuthorizationService;
 import com.cema.bovine.services.database.DatabaseService;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,6 +38,8 @@ class BatchControllerTest {
     private DatabaseService databaseService;
     @Mock
     private AuthorizationService authorizationService;
+    @Mock
+    private AdministrationClientService administrationClientService;
 
     private BatchController batchController;
 
@@ -48,7 +51,7 @@ class BatchControllerTest {
         when(authorizationService.isOnTheSameEstablishment(cuig)).thenReturn(true);
         when(authorizationService.getCurrentUserCuig()).thenReturn(cuig);
         batchController = new BatchController(batchRepository, batchMapping,
-                databaseService, authorizationService);
+                databaseService, authorizationService, administrationClientService);
     }
 
     @Test
