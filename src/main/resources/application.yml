@@ -25,14 +25,14 @@ spring:
     hikari:
       maximum-pool-size: 15
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://localhost:5432/bovine
+    url: jdbc:postgresql://192.168.100.5:5432/bovine
     username: bovine
     password: Xr5m#behGWMjMU+%
 back-end:
   users:
     url: "http://localhost:30023/v1/users"
-
-
+  administration:
+    url: "http://localhost:30025/v1/"
 
 ---
 spring:
@@ -44,6 +44,8 @@ spring:
 back-end:
   users:
     url: "http://192.168.100.5:30023/v1/users"
+  administration:
+    url: "http://192.168.100.5:30025/v1/"
 
 ---
 spring:
@@ -55,3 +57,5 @@ spring:
 back-end:
   users:
     url: "http://192.168.100.6:30023/v1/users"
+  administration:
+    url: "http://192.168.100.6:30025/v1/"

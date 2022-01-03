@@ -7,6 +7,7 @@ import com.cema.bovine.exceptions.NotFoundException;
 import com.cema.bovine.exceptions.UnauthorizedException;
 import com.cema.bovine.mapping.BovineMapping;
 import com.cema.bovine.repositories.BovineRepository;
+import com.cema.bovine.services.administration.AdministrationClientService;
 import com.cema.bovine.services.authorization.AuthorizationService;
 import com.cema.bovine.services.database.DatabaseService;
 import com.cema.bovine.services.validation.BovineValidationService;
@@ -43,6 +44,8 @@ public class BovineControllerTest {
     private AuthorizationService authorizationService;
     @Mock
     private BovineValidationService bovineValidationService;
+    @Mock
+    private AdministrationClientService administrationClientService;
 
     private BovineController bovineController;
 
@@ -53,7 +56,8 @@ public class BovineControllerTest {
         openMocks(this);
         when(authorizationService.isOnTheSameEstablishment(cuig)).thenReturn(true);
         when(authorizationService.getCurrentUserCuig()).thenReturn(cuig);
-        bovineController = new BovineController(bovineRepository, bovineMapping, databaseService, authorizationService, bovineValidationService);
+        bovineController = new BovineController(bovineRepository, bovineMapping, databaseService, authorizationService,
+                bovineValidationService, administrationClientService);
     }
 
     @Test

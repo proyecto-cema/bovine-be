@@ -8,6 +8,7 @@ import com.cema.bovine.exceptions.NotFoundException;
 import com.cema.bovine.exceptions.UnauthorizedException;
 import com.cema.bovine.mapping.BovineMapping;
 import com.cema.bovine.repositories.BovineRepository;
+import com.cema.bovine.services.administration.AdministrationClientService;
 import com.cema.bovine.services.authorization.AuthorizationService;
 import com.cema.bovine.services.database.DatabaseService;
 import com.cema.bovine.services.validation.BovineValidationService;
@@ -55,15 +56,18 @@ public class BovineController {
     private final DatabaseService databaseService;
     private final AuthorizationService authorizationService;
     private final BovineValidationService bovineValidationService;
+    private final AdministrationClientService administrationClientService;
 
     public BovineController(BovineRepository bovineRepository, BovineMapping bovineMapping,
                             DatabaseService databaseService, AuthorizationService authorizationService,
-                            BovineValidationService bovineValidationService) {
+                            BovineValidationService bovineValidationService,
+                            AdministrationClientService administrationClientService) {
         this.bovineRepository = bovineRepository;
         this.bovineMapping = bovineMapping;
         this.databaseService = databaseService;
         this.authorizationService = authorizationService;
         this.bovineValidationService = bovineValidationService;
+        this.administrationClientService = administrationClientService;
     }
 
     @ApiOperation(value = "Validate a bovine", response = Bovine.class)
@@ -144,6 +148,7 @@ public class BovineController {
         if (!authorizationService.isOnTheSameEstablishment(cuig)) {
             throw new UnauthorizedException(String.format(Messages.OUTSIDE_ESTABLISHMENT, cuig));
         }
+        administrationClientService.validateEstablishment(cuig);
         CemaBovine existsBovine = bovineRepository.findCemaBovineByTagAndEstablishmentCuigIgnoreCase(bovine.getTag(), cuig);
         if (existsBovine != null) {
             LOG.info("Bovine tag already exists");
@@ -188,7 +193,7 @@ public class BovineController {
             LOG.info("Bovine with tag {} and cuig {} doesn't exists", tag, cuig);
             throw new NotFoundException(String.format("Bovine with tag %s doesn't exits", tag));
         }
-
+        administrationClientService.validateEstablishment(cuig);
         bovineValidationService.validateBovineUpdate(bovine, cemaBovine);
 
         cemaBovine = bovineMapping.mapDomainToEntity(bovine, cemaBovine);
