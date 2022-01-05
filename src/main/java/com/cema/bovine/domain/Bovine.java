@@ -9,6 +9,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Builder
 @Getter
@@ -39,5 +40,7 @@ public class Bovine {
     private Date birthDate;
     @ApiModelProperty(notes = "The batches this bovine belongs to", example = "[\"batch_1\",\"OtherBatch\",\"bigbatch\",\"Some_Batch\"]")
     private List<String> batchNames;
+    @ApiModelProperty(notes = "The id of the operation that created this obvine", example = "b000bba4-229e-4b59-8548-1c26508e459c")
+    private UUID operationId;
 
 }
