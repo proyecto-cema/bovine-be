@@ -9,6 +9,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,6 +28,7 @@ public class BovineMappingImpl implements BovineMapping {
                 .category(StringUtils.capitalize(cemaBovine.getCategory()))
                 .birthDate(cemaBovine.getBirthDate())
                 .batchNames(batchNames)
+                .operationId(cemaBovine.getOperationId())
                 .build();
     }
 
@@ -41,6 +43,7 @@ public class BovineMappingImpl implements BovineMapping {
         cemaBovine.setStatus(bovine.getStatus());
         cemaBovine.setCategory(bovine.getCategory());
         cemaBovine.setBirthDate(bovine.getBirthDate());
+        cemaBovine.setOperationId(bovine.getOperationId());
         return cemaBovine;
     }
 
@@ -54,6 +57,7 @@ public class BovineMappingImpl implements BovineMapping {
         String establishmentCuig = StringUtils.hasText(bovine.getEstablishmentCuig()) ? bovine.getEstablishmentCuig() : cemaBovine.getEstablishmentCuig();
         String status = StringUtils.hasText(bovine.getStatus()) ? StringUtils.capitalize(bovine.getStatus()) : cemaBovine.getStatus();
         String category = StringUtils.hasText(bovine.getCategory()) ? StringUtils.capitalize(bovine.getCategory()) : cemaBovine.getCategory();
+        UUID operationId = bovine.getOperationId() != null ? bovine.getOperationId() : cemaBovine.getOperationId();
 
         cemaBovine.setDescription(description);
         cemaBovine.setGenre(genre);
@@ -62,6 +66,7 @@ public class BovineMappingImpl implements BovineMapping {
         cemaBovine.setStatus(status);
         cemaBovine.setCategory(category);
         cemaBovine.setBirthDate(birthDate);
+        cemaBovine.setOperationId(operationId);
 
         return cemaBovine;
     }

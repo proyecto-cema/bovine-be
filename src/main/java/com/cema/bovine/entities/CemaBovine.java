@@ -1,5 +1,11 @@
 package com.cema.bovine.entities;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -16,9 +22,15 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Table(name = "cema_bovine")
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class CemaBovine {
 
     @Id
@@ -51,6 +63,9 @@ public class CemaBovine {
     @Column(name = "category")
     private String category;
 
+    @Column(name = "operation_id")
+    private UUID operationId;
+
     @ManyToMany(cascade = { CascadeType.PERSIST })
     @JoinTable(
             name = "bovine_batch",
@@ -58,62 +73,6 @@ public class CemaBovine {
             inverseJoinColumns = { @JoinColumn(name = "batch_id") }
     )
     private Set<CemaBatch> cemaBatches = new HashSet<>();
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getTag() {
-        return tag;
-    }
-
-    public void setTag(String tag) {
-        this.tag = tag;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getGenre() {
-        return genre;
-    }
-
-    public void setGenre(String genre) {
-        this.genre = genre;
-    }
-
-    public String getEstablishmentCuig() {
-        return establishmentCuig;
-    }
-
-    public void setEstablishmentCuig(String establishmentCuig) {
-        this.establishmentCuig = establishmentCuig;
-    }
-
-    public Date getTaggingDate() {
-        return taggingDate;
-    }
-
-    public void setTaggingDate(Date taggingDate) {
-        this.taggingDate = taggingDate;
-    }
-
-    public Set<CemaBatch> getCemaBatches() {
-        return cemaBatches;
-    }
-
-    public void setCemaBatches(Set<CemaBatch> cemaBatches) {
-        this.cemaBatches = cemaBatches;
-    }
 
     public void addBatch(CemaBatch cemaBatch){
         cemaBatches.add(cemaBatch);
@@ -123,29 +82,5 @@ public class CemaBovine {
     public void removeBatch(CemaBatch cemaBatch){
         cemaBatches.remove(cemaBatch);
         cemaBatch.getCemaBovines().remove(this);
-    }
-
-    public Date getBirthDate() {
-        return birthDate;
-    }
-
-    public void setBirthDate(Date birthDate) {
-        this.birthDate = birthDate;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
     }
 }
