@@ -1,5 +1,8 @@
 package com.cema.bovine.domain;
 
+import com.cema.bovine.domain.health.Illness;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Getter;
@@ -34,13 +37,20 @@ public class Bovine {
     @ApiModelProperty(notes = "The cuig of the establishment this bovine belongs to", example = "321")
     @NotEmpty(message = "Establishment is required")
     private String establishmentCuig;
-    @ApiModelProperty(notes = "Date when the bovine was tagged")
+    @ApiModelProperty(notes = "Date when the bovine was tagged", example = "2021-03-12")
+    @JsonFormat(pattern="yyyy-MM-dd")
     private Date taggingDate;
-    @ApiModelProperty(notes = "Date when the bovine was born")
+    @ApiModelProperty(notes = "Date when the bovine was born", example = "2021-03-12")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonFormat(pattern="yyyy-MM-dd")
     private Date birthDate;
     @ApiModelProperty(notes = "The batches this bovine belongs to", example = "[\"batch_1\",\"OtherBatch\",\"bigbatch\",\"Some_Batch\"]")
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<String> batchNames;
     @ApiModelProperty(notes = "The id of the operation that created this obvine", example = "b000bba4-229e-4b59-8548-1c26508e459c")
     private UUID operationId;
+    @ApiModelProperty(notes = "Information about the bovine illness, if it has one")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Illness illness;
 
 }

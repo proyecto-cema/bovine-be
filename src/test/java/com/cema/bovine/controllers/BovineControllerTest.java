@@ -10,6 +10,7 @@ import com.cema.bovine.repositories.BovineRepository;
 import com.cema.bovine.services.administration.AdministrationClientService;
 import com.cema.bovine.services.authorization.AuthorizationService;
 import com.cema.bovine.services.database.DatabaseService;
+import com.cema.bovine.services.health.HealthClientService;
 import com.cema.bovine.services.validation.BovineValidationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,6 +47,8 @@ public class BovineControllerTest {
     private BovineValidationService bovineValidationService;
     @Mock
     private AdministrationClientService administrationClientService;
+    @Mock
+    private HealthClientService healthClientService;
 
     private BovineController bovineController;
 
@@ -57,7 +60,7 @@ public class BovineControllerTest {
         when(authorizationService.isOnTheSameEstablishment(cuig)).thenReturn(true);
         when(authorizationService.getCurrentUserCuig()).thenReturn(cuig);
         bovineController = new BovineController(bovineRepository, bovineMapping, databaseService, authorizationService,
-                bovineValidationService, administrationClientService);
+                bovineValidationService, administrationClientService, healthClientService);
     }
 
     @Test

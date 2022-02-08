@@ -2,6 +2,7 @@ package com.cema.bovine.controllers;
 
 import com.cema.bovine.constants.Messages;
 import com.cema.bovine.domain.Bovine;
+import com.cema.bovine.domain.health.Illness;
 import com.cema.bovine.entities.CemaBovine;
 import com.cema.bovine.exceptions.AlreadyExistsException;
 import com.cema.bovine.exceptions.NotFoundException;
@@ -11,6 +12,7 @@ import com.cema.bovine.repositories.BovineRepository;
 import com.cema.bovine.services.administration.AdministrationClientService;
 import com.cema.bovine.services.authorization.AuthorizationService;
 import com.cema.bovine.services.database.DatabaseService;
+import com.cema.bovine.services.health.HealthClientService;
 import com.cema.bovine.services.validation.BovineValidationService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -57,17 +59,20 @@ public class BovineController {
     private final AuthorizationService authorizationService;
     private final BovineValidationService bovineValidationService;
     private final AdministrationClientService administrationClientService;
+    private final HealthClientService healthClientService;
 
     public BovineController(BovineRepository bovineRepository, BovineMapping bovineMapping,
                             DatabaseService databaseService, AuthorizationService authorizationService,
                             BovineValidationService bovineValidationService,
-                            AdministrationClientService administrationClientService) {
+                            AdministrationClientService administrationClientService,
+                            HealthClientService healthClientService) {
         this.bovineRepository = bovineRepository;
         this.bovineMapping = bovineMapping;
         this.databaseService = databaseService;
         this.authorizationService = authorizationService;
         this.bovineValidationService = bovineValidationService;
         this.administrationClientService = administrationClientService;
+        this.healthClientService = healthClientService;
     }
 
     @ApiOperation(value = "Validate a bovine", response = Bovine.class)
@@ -126,7 +131,9 @@ public class BovineController {
         if (cemaBovine == null) {
             throw new NotFoundException(String.format("Bovine with tag %s doesn't exits", tag));
         }
+        Illness illness = healthClientService.getBovineIllness(tag);
         Bovine bovine = bovineMapping.mapEntityToDomain(cemaBovine);
+        bovine.setIllness(illness);
 
         return new ResponseEntity<>(bovine, HttpStatus.OK);
     }
@@ -303,7 +310,7 @@ public class BovineController {
 
         LOG.info("Listing bovines {} for cuig {}", userCuig, bovineTags);
         List<CemaBovine> cemaBovines = bovineRepository.findCemaBovinesByTagIn(bovineTags);
-        if(!authorizationService.isAdmin()) {
+        if (!authorizationService.isAdmin()) {
             cemaBovines = cemaBovines.stream()
                     .filter(cemaBovine -> cemaBovine.getEstablishmentCuig().equalsIgnoreCase(userCuig))
                     .collect(Collectors.toList());
@@ -311,7 +318,6 @@ public class BovineController {
         List<Bovine> bovines = cemaBovines.stream().map(bovineMapping::mapEntityToDomain).collect(Collectors.toList());
         return new ResponseEntity<>(bovines, HttpStatus.OK);
     }
-
 
 
 }
