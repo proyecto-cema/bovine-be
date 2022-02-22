@@ -289,6 +289,11 @@ public class BovineController {
 
         List<Bovine> mappedBovines = bovineList.stream().map(bovineMapping::mapEntityToDomain).collect(Collectors.toList());
 
+        for (Bovine bovine : mappedBovines) {
+            Illness illness = healthClientService.getBovineIllness(bovine.getTag());
+            bovine.setIllness(illness);
+        }
+
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("total-elements", String.valueOf(bovinePage.getTotalElements()));
         responseHeaders.set("total-pages", String.valueOf(bovinePage.getTotalPages()));
@@ -316,6 +321,11 @@ public class BovineController {
                     .collect(Collectors.toList());
         }
         List<Bovine> bovines = cemaBovines.stream().map(bovineMapping::mapEntityToDomain).collect(Collectors.toList());
+
+        for (Bovine bovine : bovines) {
+            Illness illness = healthClientService.getBovineIllness(bovine.getTag());
+            bovine.setIllness(illness);
+        }
         return new ResponseEntity<>(bovines, HttpStatus.OK);
     }
 
